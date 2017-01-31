@@ -25,14 +25,14 @@ public class Departments {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        while (noExit) {
+        /*while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }
-        /*readCommand("create -d 111 1111 11111");
+        }*/
+        readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
-        readCommand("create -e -n Ivan1 Ivanovich1 -t m -a 21 -m Scrum -dn 222 2222 22222");
+        /*readCommand("create -e -n Ivan1 Ivanovich1 -t m -a 21 -m Scrum -dn 222 2222 22222");
         readCommand("create -e -n Ivan2 Ivanovich2 -t d -a 22 -l Java -dn 222 2222 22222");
         readCommand("create -e -n Ivan3 Ivanovich3 -t d -a 23 -l Java -dn 222 2222 22222");
         readCommand("save");*/
@@ -140,7 +140,7 @@ public class Departments {
         }
     }
 
-    private void createDepartment(String[] commands) {
+    public void createDepartment(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
 
         if (!name.equals("")) {
@@ -404,7 +404,7 @@ public class Departments {
         return result;
     }
 
-    private String getStringFromManyWords(String[] commands, int cindex) {
+    public String getStringFromManyWords(String[] commands, int cindex) {
         String result = "";
 
         if (cindex == -1) {

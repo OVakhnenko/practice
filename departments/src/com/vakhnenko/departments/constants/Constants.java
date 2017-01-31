@@ -31,6 +31,39 @@ public class Constants {
     public static final boolean CREATE_EMPLOYEE = false;
     public static final boolean UPDATE_EMPLOYEE = true;
 
+    public static final String DB_DRIVER = "com.mysql.jdbc.Driver"; //"oracle.jdbc.driver.OracleDriver";
+    public static final String DB_CONNECTION = "jdbc:mysql://localhost:3306/departments";
+    public static final String DB_USER = "root";
+    public static final String DB_PASSWORD = "oJ0K58fE29kZhgXcQQV7";
+
+    public static final int DB_CREATE_ERROR_EXIT_CODE = -1;
+
+    public static final String DEPARTMENT_TABLE_NAME = "department";
+    public static final String EMPLOYEE_TABLE_NAME = "employee";
+
+    public static final String CREATE_DB_DEPARTMENT_IF_NOT_EXISTS_SCRIPT = ""
+            + "create table if not exists department ("
+            + "id int not null auto_increment,"
+            + "name varchar(25) not null,"
+            + "primary key (id)"
+            + ")engine = innodb";
+    public static final String CREATE_DB_EMPLOYEE_IF_NOT_EXISTS_SCRIPT = ""
+            + "create table if not exists employee ("
+            + "id int not null auto_increment,"
+            + "name varchar(25) not null,"
+            + "age tinyint not null,"
+            + "type varchar(1) not null,"
+            + "department_id int not null,"
+            + "methodology varchar(25) not null,"
+            + "language varchar(25) not null,"
+            + "primary key (id)"
+            + ")engine = innodb";
+    public static final String INSERT__INTO_DB_DEPERTMENT = ""
+            + "insert into department (name) values (";
+
+    public static final String CLOSING_STRUCTURE = ")";
+
+
     private Constants() {
     }
 }
