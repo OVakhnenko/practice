@@ -41,25 +41,41 @@ public class Constants {
     public static final String DEPARTMENT_TABLE_NAME = "department";
     public static final String EMPLOYEE_TABLE_NAME = "employee";
 
-    public static final String CREATE_DB_DEPARTMENT_IF_NOT_EXISTS_SCRIPT = ""
+    public static final String CREATE_DB_DEPARTMENT_IF_NOT_EXISTS = ""
             + "create table if not exists department ("
             + "id int not null auto_increment,"
             + "name varchar(25) not null,"
             + "primary key (id)"
             + ")engine = innodb";
-    public static final String CREATE_DB_EMPLOYEE_IF_NOT_EXISTS_SCRIPT = ""
+    public static final String CREATE_DB_EMPLOYEE_IF_NOT_EXISTS = ""
             + "create table if not exists employee ("
             + "id int not null auto_increment,"
-            + "name varchar(25) not null,"
+            + "name varchar(20) not null,"
             + "age tinyint not null,"
             + "type varchar(1) not null,"
-            + "department_id int not null,"
-            + "methodology varchar(25) not null,"
-            + "language varchar(25) not null,"
+            + "department_name varchar(25) not null,"
+            + "methodology varchar(20) not null default '',"
+            + "language varchar(20) not null default '' ,"
             + "primary key (id)"
             + ")engine = innodb";
-    public static final String INSERT__INTO_DB_DEPERTMENT = ""
+    public static final String INSERT_INTO_DB_DEPERTMENT = ""
             + "insert into department (name) values (";
+    public static final String INSERT_INTO_DB_MANAGER = ""
+            + "insert into employee (name, age, type, department_name, methodology) values (";
+    public static final String INSERT_INTO_DB_DEVELOPER = ""
+            + "insert into employee (name, age, type, department_name, language) values (";
+    public static final String SELECT_NAME_FROM_DB_DEPARTMENT = ""
+            + "select name from department ";
+    public static final String SELECT_NAME_FROM_DB_EMPLOYEE = ""
+            + "select name from employee ";
+    public static final String SELECT_TYPE_FROM_DB_EMPLOYEE = ""
+            + "select type from employee ";
+    public static final String SELECT_ALL_FROM_DB_EMPLOYEE = ""
+            + "select name, age, type, department_name, methodology, language from employee ";
+    public static final String WHERE_DEPARTMENT_NAME_IS_EQUAL = ""
+            + "where department_name = ";
+    public static final String WHERE_NAME_IS_EQUAL = ""
+            + "where name = ";
 
     public static final String CLOSING_STRUCTURE = ")";
 

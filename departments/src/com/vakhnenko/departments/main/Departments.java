@@ -29,16 +29,24 @@ public class Departments {
             command = reader.readLine();
             noExit = readCommand(command);
         }*/
-        readCommand("create -d 111 1111 11111");
+        /*readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
-        /*readCommand("create -e -n Ivan1 Ivanovich1 -t m -a 21 -m Scrum -dn 222 2222 22222");
-        readCommand("create -e -n Ivan2 Ivanovich2 -t d -a 22 -l Java -dn 222 2222 22222");
-        readCommand("create -e -n Ivan3 Ivanovich3 -t d -a 23 -l Java -dn 222 2222 22222");
-        readCommand("save");*/
+        readCommand("create -d 444 4444 44444");
+        readCommand("create -e -n Ivan1 Ivanovich1 -t m -a 21 -m Scrum -dn 111 1111 11111");
+        readCommand("create -e -n Ivan2 Ivanovich2 -t m -a 21 -m Scrum -dn 222 2222 22222");
+        readCommand("create -e -n Ivan3 Ivanovich3 -t m -a 21 -m Scrum -dn 333 3333 33333");
+        readCommand("create -e -n Ivan2 Ivanovich5 -t d -a 22 -l Java -dn 222 2222 22222");
+        readCommand("create -e -n Ivan3 Ivanovich6 -t d -a 23 -l Java -dn 222 2222 22222");
+        readCommand("create -e -n Ivan3 Ivanovich7 -t d -a 23 -l Java -dn 222 2222 22222");
+        readCommand("create -e -n Ivan3 Ivanovich8 -t d -a 23 -l Java -dn 222 2222 22222");*/
+        readCommand("departments");
+        readCommand("open -d 222 2222 22222");
+        //readCommand("open -e Ivan1 Ivanovich1");
+        //readCommand("update -e -n Ivan3 Ivanovich8 -t d -a 23 -l Java1 -dn 222 2222 22222");
     }
 
-    private boolean saveToFile() {
+    public boolean saveToFile() {
         boolean saved = false;
 
         if (departmentDAO.getSize() == 0) {
@@ -71,7 +79,7 @@ public class Departments {
         return true;
     }
 
-    private void readFromFile() {
+    public void readFromFile() {
         if (departmentDAO.getSize() != 0) {
             System.out.println("Error! Departments are exists");
         } else {
@@ -140,20 +148,23 @@ public class Departments {
         }
     }
 
-    public void createDepartment(String[] commands) {
+    private void createDepartment(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
 
         if (!name.equals("")) {
-            departmentDAO.create(name);
-            printAllDepartments();
+            createDepartmentAndPrintAll(name);
         } else {
             System.out.println("Error! Name is empty");
         }
     }
 
+    public void createDepartmentAndPrintAll(String name) {
+        departmentDAO.create(name);
+        printAllDepartments();
+    }
+
     private void createEmployee(String[] commands, boolean update) {
         int positionOfKey;
-        Entity entity = null; // initialization for IDEA :)
         String type;
 
         positionOfKey = searchKeyInArray(commands, NAME_EMPLOYEE_KEY);
@@ -165,15 +176,14 @@ public class Departments {
         }
 
         if (update) {
-            if (!employeeDAO.exists(employeeName)) {
+            if (employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" not found");
                 return;
             } else {
-                entity = employeeDAO.search(employeeName);
-                type = ((Employee) entity).getType();
+                type = getTypeEmployee(employeeName);
             }
         } else {
-            if (employeeDAO.exists(employeeName)) {
+            if (employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" already exists");
                 return;
             }
@@ -188,7 +198,7 @@ public class Departments {
             return;
         }
 
-        if (!departmentDAO.exists(departmentName)) {
+        if (!departmentExists(departmentName)) {
             System.out.println("Error! Department not exists!");
             printAllDepartments();
             return;
@@ -210,29 +220,53 @@ public class Departments {
         switch (type) {
             case EMPLOYEE_MANAGER_TYPE:
                 if (update) {
-                    ((Manager) entity).setAge(age);
-                    ((Manager) entity).setMethodology(methodology);
-                    ((Manager) entity).setDepartment(departmentName);
+                    updateManagerAndPrint(employeeName, age, departmentName, methodology);
                 } else {
-                    entity = new Manager(employeeName, type, age, departmentName, methodology);
-                    employeeDAO.add(entity);
+                    createManagerAndPrint(employeeName, type, age, departmentName, methodology);
                 }
-                printEmploee(entity, NOT_USE_BR);
                 break;
             case EMPLOYEE_DEVELOPER_TYPE:
                 if (update) {
-                    ((Developer) entity).setAge(age);
-                    ((Developer) entity).setLanguage(language);
-                    ((Developer) entity).setDepartment(departmentName);
+                    updateDeveloperAndPrint(employeeName, age, departmentName, language);
                 } else {
-                    entity = new Developer(employeeName, type, age, departmentName, language);
-                    employeeDAO.add(entity);
+                    createDeveloperAndPrint(employeeName, type, age, departmentName, language);
                 }
-                printEmploee(entity, NOT_USE_BR);
                 break;
             default:
                 System.out.println("Error! The unknown type of employee!");
         }
+    }
+
+    public void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
+        Entity entity = new Manager(employeeName, type, age, departmentName, methodology);
+
+        employeeDAO.add(entity);
+        printEmployee(employeeName, NOT_USE_BR);
+    }
+
+    public void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
+        Entity entity = new Developer(employeeName, type, age, departmentName, language);
+
+        employeeDAO.add(entity);
+        printEmployee(employeeName, NOT_USE_BR);
+    }
+
+    public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
+        Entity entity = employeeDAO.search(employeeName);
+
+        ((Manager) entity).setAge(age);
+        ((Manager) entity).setMethodology(methodology);
+        ((Manager) entity).setDepartment(departmentName);
+        printEmployee(employeeName, NOT_USE_BR);
+    }
+
+    public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
+        Entity entity = employeeDAO.search(employeeName);
+
+        ((Developer) entity).setAge(age);
+        ((Developer) entity).setLanguage(language);
+        ((Developer) entity).setDepartment(departmentName);
+        printEmployee(employeeName, NOT_USE_BR);
     }
 
     private void remove(String[] commands) {
@@ -287,7 +321,7 @@ public class Departments {
         Entity tmp = employeeDAO.search(employeeName);
 
         if (tmp != null) {
-            printEmploee(tmp, USE_BR);
+            printEmployee(tmp.getName(), USE_BR);
         } else {
             System.out.println(employeeDAO.getEmployeeStatus() + " \"" + employeeName + "\" not found!");
         }
@@ -303,33 +337,52 @@ public class Departments {
         }
     }
 
-    private void printAllEmployee(String department) {
+    public boolean departmentExists(String departmentName) {
+        return departmentDAO.exists(departmentName);
+    }
+
+    public boolean employeeExists(String employeeName) {
+        return employeeDAO.exists(employeeName);
+    }
+
+    public String getTypeEmployee(String employeeName) {
+        Entity entity = employeeDAO.search(employeeName);
+        return ((Employee) entity).getType();
+    }
+
+    public void printAllEmployee(String department) {
 
         for (Entity employee : employeeDAO.getAll()) {
             if (((Employee) employee).getDepartment().equals(department))
-                printEmploee(employee, NOT_USE_BR);
+                printEmployee(employee.getName(), NOT_USE_BR);
         }
     }
 
-    private void printAllDepartments() {
+    public void printAllDepartments() {
         departmentDAO.printAll();
     }
 
-    private void printEmploee(Entity entity, boolean use_br) {
-        System.out.print("Name " + entity.getName() + " " + ((use_br) ? "\n" : ""));
-        System.out.print("ID " + entity.getID() + " " + ((use_br) ? "\n" : ""));
+    public void printEmployee(String employeeName, boolean use_br) {
+        Entity entity = employeeDAO.search(employeeName);
 
-        System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
-        System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
+        if (entity != null) {
+            System.out.print("Name " + entity.getName() + " " + ((use_br) ? "\n" : ""));
+            System.out.print("ID " + entity.getID() + " " + ((use_br) ? "\n" : ""));
 
-        if (entity.getClass().getName().equals("com.vakhnenko.departments.Manager")) {
-            System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
-            System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
-        } else if (entity.getClass().getName().equals("com.vakhnenko.departments.Developer")) {
-            System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
-            System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
+            System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
+            System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
+
+            if (entity.getClass().getName().equals("com.vakhnenko.departments.Manager")) {
+                System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
+                System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
+            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.Developer")) {
+                System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
+                System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
+            }
+            System.out.println();
+        } else {
+            System.out.println("The employee \"" + employeeName + "\" not found");
         }
-        System.out.println();
     }
 
     private void printFirstScreen() {
@@ -339,21 +392,46 @@ public class Departments {
     }
 
     private void printHelp() {
+        printHelpCommandsList();
+        printHelpDepartment();
+        printHelpEmployee();
+        printHelpReadSave();
+        printHelpSomething();
+        printHelpExit();
+    }
+
+    private void printHelpCommandsList() {
         System.out.println("commanrds list:");
         System.out.println("");
+    }
+
+    public void printHelpDepartment() {
         System.out.println("type \"create -d department_name\" for create department \"department_name\"");
         System.out.println("type \"rm -d department_name\" for remove department \"department_name\"");
         System.out.println("type \"departments\" for print list of all departments");
         System.out.println("");
+    }
+
+    private void printHelpEmployee() {
         System.out.println("type \"create -e -n employee_name -t m -a age -m methodology\" for for create manager of");
         System.out.println("type \"create -e -n employee_name -t d -a age -l language \" for for create developer");
         System.out.println("type \"rm -e employee_name\" for remove employee \"employee_name\"");
         System.out.println("type \"open -d department_name\" for watch department details");
         System.out.println("type \"open -e employee_name\" for watch employee details");
         System.out.println("");
+    }
+
+    public void printHelpReadSave() {
         System.out.println("type \"save\" for save data to file");
         System.out.println("type \"read\" for read data from file");
         System.out.println("");
+    }
+
+    public void printHelpSomething() {
+
+    }
+
+    private void printHelpExit() {
         System.out.println("type \"help\" for commands list");
         System.out.println("type \"exit\" for exit");
         System.out.println("");
