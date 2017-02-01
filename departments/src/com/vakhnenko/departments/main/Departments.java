@@ -39,11 +39,12 @@ public class Departments {
         readCommand("create -e -n Ivan2 Ivanovich5 -t d -a 22 -l Java -dn 222 2222 22222");
         readCommand("create -e -n Ivan3 Ivanovich6 -t d -a 23 -l Java -dn 222 2222 22222");
         readCommand("create -e -n Ivan3 Ivanovich7 -t d -a 23 -l Java -dn 222 2222 22222");
-        readCommand("create -e -n Ivan3 Ivanovich8 -t d -a 23 -l Java -dn 222 2222 22222");*/
+        readCommand("create -e -n Ivan3 Ivanovich8 -t d -a 23 -l Java -dn 222 2222 22222");
         readCommand("departments");
         readCommand("open -d 222 2222 22222");
-        //readCommand("open -e Ivan1 Ivanovich1");
-        //readCommand("update -e -n Ivan3 Ivanovich8 -t d -a 23 -l Java1 -dn 222 2222 22222");
+        readCommand("open -e Ivan1 Ivanovich1");*/
+        readCommand("update -e -n Ivan3 Ivanovich3 -a 23 -m Scrum1 -dn 222 2222 22222");
+        readCommand("update -e -n Ivan2 Ivanovich5 -a 24 -l Java1 -dn 111 1111 11111");
     }
 
     public boolean saveToFile() {
@@ -318,6 +319,10 @@ public class Departments {
 
     private void openEmployee(String[] commands) {
         String employeeName = getStringFromManyWords(commands, FIRST_KEY_POSITION);
+        openEntityWithName(employeeName);
+    }
+
+    public void openEntityWithName(String employeeName) {
         Entity tmp = employeeDAO.search(employeeName);
 
         if (tmp != null) {
