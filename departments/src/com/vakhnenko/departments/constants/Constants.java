@@ -72,10 +72,12 @@ public class Constants {
             + "select type from employee ";
     public static final String SELECT_ALL_FROM_DB_EMPLOYEE = ""
             + "select name, age, type, department_name, methodology, language from employee ";
-    public static final String WHERE_DEPARTMENT_NAME_IS_EQUAL = ""
-            + "where department_name = ";
-    public static final String WHERE_NAME_IS_EQUAL = ""
+    public static final String UPDATE_EMPLOYEE_DB_EMPLOYEE = ""
+            + "update employee set ";
+    public static final String WHERE_NAME_IS_EQUAL = " "
             + "where name = ";
+    public static final String WHERE_DEPARTMENT_NAME_IS_EQUAL = " "
+            + "where department_name = ";
 
     public static final String CLOSING_STRUCTURE = ")";
 

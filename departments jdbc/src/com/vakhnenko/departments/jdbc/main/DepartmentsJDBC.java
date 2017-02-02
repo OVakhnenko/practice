@@ -2,6 +2,7 @@ package com.vakhnenko.departments.jdbc.main;
 
 import java.io.*;
 import java.sql.*;
+
 import com.vakhnenko.departments.main.*;
 
 import static com.vakhnenko.departments.jdbc.strings.Strings.*;
@@ -68,11 +69,48 @@ public class DepartmentsJDBC extends Departments {
         printEmployee(employeeName, NOT_USE_BR);
     }
 
-    //@Override
-    //public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {}
+    @Override
+    public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
+        if (!employeeExists(employeeName)) {
+            System.out.println("Error! Manager " + employeeName + " not found!");
+        }
+        if (age > 0) {
+            updateEmployee(" age = " + age, swq(employeeName));
+        }
+        if (!departmentName.equals("")) {
+            updateEmployee(" department_name = " + swq(departmentName), swq(employeeName));
+        }
+        if (!methodology.equals("")) {
+            updateEmployee(" methodology = " + swq(methodology), swq(employeeName));
+        }
+        System.out.println("Manager " + employeeName + " updated");
+    }
 
-    //@Override
-    //public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {}*/
+    @Override
+    public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
+        if (!employeeExists(employeeName)) {
+            System.out.println("Error! Developer " + employeeName + " not found!");
+        }
+        if (age > 0) {
+            updateEmployee(" age = " + age, swq(employeeName));
+        }
+        if (!departmentName.equals("")) {
+            updateEmployee(" department_name = " + swq(departmentName), swq(employeeName));
+        }
+        if (!language.equals("")) {
+            updateEmployee(" language = " + swq(language), swq(employeeName));
+        }
+        System.out.println("Developer " + employeeName + " updated");
+    }
+
+    private void updateEmployee(String updateQuery, String employeeName) {
+        String query = UPDATE_EMPLOYEE_DB_EMPLOYEE + updateQuery + WHERE_NAME_IS_EQUAL + employeeName;
+        try {
+            statement.execute(query);
+        } catch (SQLException e) {
+            System.out.println("MySQL error! " + query);
+        }
+    }
 
     private boolean exists(String query) {
         boolean result = false;
@@ -99,16 +137,16 @@ public class DepartmentsJDBC extends Departments {
 
     @Override
     public String getTypeEmployee(String employeeName) {
-        String query = SELECT_TYPE_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + employeeName;
+        String query = SELECT_TYPE_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(employeeName);
         String result = "";
 
-        if (employeeExists(employeeName)) {
+        if (!employeeExists(employeeName)) {
             System.out.println("Error! Employee " + employeeName + " not found!");
         } else {
             try {
                 ResultSet rs = statement.executeQuery(query);
                 if (rs.next()) {
-                    result = rs.getString(1);
+                    result = rs.getString("type");
                 }
             } catch (SQLException e) {
                 System.out.println("MySQL query error! " + query);
@@ -122,7 +160,7 @@ public class DepartmentsJDBC extends Departments {
         try {
             ResultSet rs = statement.executeQuery(SELECT_NAME_FROM_DB_DEPARTMENT);
             while (rs.next()) {
-                String name = rs.getString(1);
+                String name = rs.getString("name");
                 System.out.println("name: " + name);
             }
         } catch (SQLException e) {
@@ -157,23 +195,23 @@ public class DepartmentsJDBC extends Departments {
         try {
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                String name = rs.getString(1);
+                String name = rs.getString("name");
                 System.out.print("name: " + name + " " + ((use_br) ? "\n" : ""));
 
-                int age = rs.getInt(2);
+                int age = rs.getInt("age");
                 System.out.print("age: " + age + " " + ((use_br) ? "\n" : ""));
 
-                String type = rs.getString(3);
-                String departmentName = rs.getString(4);
+                String type = rs.getString("type");
+                String departmentName = rs.getString("department_name");
                 System.out.print("department: " + departmentName + " " + ((use_br) ? "\n" : ""));
 
                 if (type.equals(EMPLOYEE_MANAGER_TYPE)) {
                     System.out.print("type: " + type + " (MANAGER) " + ((use_br) ? "\n" : ""));
-                    String methodology = rs.getString(5);
+                    String methodology = rs.getString("methodology");
                     System.out.print("methodology: " + methodology + " " + ((use_br) ? "\n" : ""));
                 } else {
                     System.out.print("type: " + type + " (DEVELOPER) " + ((use_br) ? "\n" : ""));
-                    String language = rs.getString(6);
+                    String language = rs.getString("language");
                     System.out.print("language: " + language + " " + ((use_br) ? "\n" : ""));
                 }
                 System.out.println();

@@ -25,14 +25,15 @@ public class Departments {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        /*while (noExit) {
+        while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }*/
+        }
         /*readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
         readCommand("create -d 444 4444 44444");
+        readCommand("create -d 555 5555 55555");
         readCommand("create -e -n Ivan1 Ivanovich1 -t m -a 21 -m Scrum -dn 111 1111 11111");
         readCommand("create -e -n Ivan2 Ivanovich2 -t m -a 21 -m Scrum -dn 222 2222 22222");
         readCommand("create -e -n Ivan3 Ivanovich3 -t m -a 21 -m Scrum -dn 333 3333 33333");
@@ -42,9 +43,12 @@ public class Departments {
         readCommand("create -e -n Ivan3 Ivanovich8 -t d -a 23 -l Java -dn 222 2222 22222");
         readCommand("departments");
         readCommand("open -d 222 2222 22222");
-        readCommand("open -e Ivan1 Ivanovich1");*/
-        readCommand("update -e -n Ivan3 Ivanovich3 -a 23 -m Scrum1 -dn 222 2222 22222");
-        readCommand("update -e -n Ivan2 Ivanovich5 -a 24 -l Java1 -dn 111 1111 11111");
+        readCommand("open -e Ivan1 Ivanovich1");
+        readCommand("update -e -n Ivan3 Ivanovich3 -a 35 -m Scrum3 -dn 222 2222 22222");
+        readCommand("update -e -n Ivan2 Ivanovich5 -a 36 -l Java2 -dn 333 3333 33333");
+        readCommand("update -e -n Ivan2 Ivanovich5 -l Java3 -dn 111 1111 11111");
+        readCommand("update -e -n Ivan2 Ivanovich5 -dn 555 5555 55555");
+        readCommand("update -e -n Ivan2 Ivanovich5 ");*/
     }
 
     public boolean saveToFile() {
@@ -177,7 +181,7 @@ public class Departments {
         }
 
         if (update) {
-            if (employeeExists(employeeName)) {
+            if (!employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" not found");
                 return;
             } else {
@@ -194,19 +198,24 @@ public class Departments {
         positionOfKey = searchKeyInArray(commands, DEPARTMENT_EMPLOYEE_KEY);
         String departmentName = getStringFromManyWords(commands, positionOfKey);
 
-        if (departmentName.equals("")) {
-            System.out.println("Error! Department is empty");
-            return;
+        if (!update) {
+            if (departmentName.equals("")) {
+                System.out.println("Error! Department is empty");
+                return;
+            }
+            if (!departmentExists(departmentName)) {
+                System.out.println("Error! Department not exists!");
+                printAllDepartments();
+                return;
+            }
         }
-
-        if (!departmentExists(departmentName)) {
-            System.out.println("Error! Department not exists!");
-            printAllDepartments();
-            return;
-        }
-
         // type already initialized
-        int age = Integer.valueOf(getKeyFromArray(commands, AGE_EMPLOYEE_KEY));
+        int age;
+        try {
+            age = Integer.valueOf(getKeyFromArray(commands, AGE_EMPLOYEE_KEY));
+        } catch (NumberFormatException e) {
+            age = 0;
+        }
         String language = getKeyFromArray(commands, LANGUAGE_EMPLOYEE_KEY);
         String methodology = getKeyFromArray(commands, METHODOLOGY_EMPLOYEE_KEY);
 
