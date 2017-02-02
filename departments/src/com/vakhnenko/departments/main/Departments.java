@@ -48,7 +48,11 @@ public class Departments {
         readCommand("update -e -n Ivan2 Ivanovich5 -a 36 -l Java2 -dn 333 3333 33333");
         readCommand("update -e -n Ivan2 Ivanovich5 -l Java3 -dn 111 1111 11111");
         readCommand("update -e -n Ivan2 Ivanovich5 -dn 555 5555 55555");
-        readCommand("update -e -n Ivan2 Ivanovich5 ");*/
+        readCommand("update -e -n Ivan2 Ivanovich5 ");
+        readCommand("all");
+        readCommand("search -e -a 23 -d 222 2222 22222");
+        readCommand("top -d -t d");
+        readCommand("top -d -t m");*/
     }
 
     public boolean saveToFile() {
@@ -127,6 +131,15 @@ public class Departments {
                 break;
             case PRINT_ALL_DEPARTMENTS_COMMAND:
                 printAllDepartments();
+                break;
+            case ALL_COMMAND:
+                printAll();
+                break;
+            case SEARCH_COMMAND:
+                printSearchedEmployee(commands);
+                break;
+            case TOP_COMMAND:
+                printTopEmployee(commands);
                 break;
             case SAVE_COMMAND:
                 saveToFile();
@@ -399,6 +412,41 @@ public class Departments {
         }
     }
 
+    public void printAll() {
+        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+    }
+
+    private void printSearchedEmployee(String[] commands) {
+        int positionOfKey;
+        int age;
+
+        if (getCommands(commands, FIRST_KEY_POSITION).equals(EMPLOYEE_KEY)) {
+            positionOfKey = searchKeyInArray(commands, DEPARTMENT_KEY);
+            String departmentName = getStringFromManyWords(commands, positionOfKey);
+            try {
+                age = Integer.valueOf(getKeyFromArray(commands, AGE_EMPLOYEE_KEY));
+            } catch (NumberFormatException e) {
+                age = 0;
+            }
+            printSearchedEmployeeAge(departmentName, age);
+        } else {
+            System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        }
+    }
+
+    public void printSearchedEmployeeAge(String departmentName, int age) {
+        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+    }
+
+    private void printTopEmployee(String[] commands) {
+        String type = getKeyFromArray(commands, TYPE_EMPLOYEE_KEY);
+        printTopEmployee(type);
+    }
+
+    public void printTopEmployee(String type) {
+        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+    }
+
     private void printFirstScreen() {
         System.out.println("Departments and Employees");
         System.out.println("Type \"help\" for commands list or type \"exit\" for exit");
@@ -442,7 +490,6 @@ public class Departments {
     }
 
     public void printHelpSomething() {
-
     }
 
     private void printHelpExit() {

@@ -2,6 +2,8 @@ package com.vakhnenko.departments.jdbc.main;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.vakhnenko.departments.main.*;
 
@@ -178,6 +180,75 @@ public class DepartmentsJDBC extends Departments {
     }
 
     @Override
+    public void printAll() {
+        String tmpString;
+        try {
+            printStringSetLength("Department Name", 26);
+            printStringSetLength("Employee Name", 26);
+            printStringSetLength("Type", 20);
+            printStringSetLength("Age", 20);
+            System.out.println();
+
+            ResultSet rs = statement.executeQuery(SELECT_ALL_FROM_DB_EMPLOYEE_WO);
+            while (rs.next()) {
+                tmpString = rs.getString("department_name");
+                printStringSetLength(tmpString, 26);
+                tmpString = rs.getString("name");
+                printStringSetLength(tmpString, 26);
+                tmpString = rs.getString("type");
+                printStringSetLength(tmpString, 20);
+                tmpString = Integer.toString(rs.getInt("age"));
+                printStringSetLength(tmpString, 20);
+                System.out.println();
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + SELECT_ALL_FROM_DB_EMPLOYEE_WO);
+        }
+    }
+
+    @Override
+    public void printSearchedEmployeeAge(String departmentName, int age) {
+        String tmpString;
+        String query = "";
+
+        if (age <= 0) {
+            System.out.println("Error! Age " + age);
+            return;
+        }
+        if (!departmentExists(departmentName)) {
+            System.out.println("The department \"" + departmentName + "\" not found");
+        } else {
+            try {
+                printStringSetLength("Employee Name", 26);
+                printStringSetLength("Type", 20);
+                printStringSetLength("Department Name", 26);
+                System.out.println();
+
+                query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_AGE_IS_EQUAL + age + " AND "
+                        + DEPARTMENT_IS_EQUAL + swq(departmentName);
+                ResultSet rs = statement.executeQuery(query);
+                while (rs.next()) {
+                    tmpString = rs.getString("name");
+                    printStringSetLength(tmpString, 26);
+                    tmpString = rs.getString("type");
+                    printStringSetLength(tmpString, 20);
+                    tmpString = rs.getString("department_name");
+                    printStringSetLength(tmpString, 26);
+                    System.out.println();
+                }
+            } catch (SQLException e) {
+                System.out.println("MySQL query error! " + query);
+            }
+        }
+    }
+
+    private void printStringSetLength(String str, int length) {
+        StringBuffer buffer = new StringBuffer(str);
+        buffer.setLength(length);
+        System.out.print("" + buffer);
+    }
+
+    @Override
     public void openEntityWithName(String employeeName) {
         printEmployee(employeeName, USE_BR);
     }
@@ -222,11 +293,61 @@ public class DepartmentsJDBC extends Departments {
     }
 
     @Override
+    public void printTopEmployee(String type) {
+        List<String> departments = new ArrayList<>();
+        String department = "";
+        int max = 0;
+        int tmp;
+
+        try {
+            ResultSet rs = statement.executeQuery(SELECT_NAME_FROM_DB_DEPARTMENT);
+            while (rs.next()) {
+                String name = rs.getString("name");
+                departments.add(name);
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + SELECT_NAME_FROM_DB_DEPARTMENT);
+        }
+        for (Object dep : departments) {
+            tmp = getMaxEmployees("" + dep, type);
+            if (tmp > max) {
+                max = tmp;
+                department = "" + dep;
+            }
+        }
+        if (max > 0) {
+            System.out.println("Department " + department + " has " + max + ((type.equals("D")) ? " developers" : " managers"));
+        } else {
+            System.out.println("Department's is not have any " + ((type.equals("D")) ? " developers" : " managers"));
+        }
+    }
+
+    private int getMaxEmployees(String departmentName, String type) {
+        int result = 0;
+
+        String query = SELECT_COUNT_FROM_DB_EMPLOYEE + WHERE_DEPARTMENT_NAME_IS_EQUAL
+                + swq(departmentName) + " AND " + TYPE_IS_EQUAL + swq(type);
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next()) {
+                result = rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+    @Override
     public void printHelpReadSave() {
     }
 
     @Override
     public void printHelpSomething() {
+        System.out.println("Type \"all\" for print list of all departments and employees");
+        System.out.println("Type \"search -e -a age_to_search -d department\" for search employees");
+        System.out.println("Type \"top -d -t type_of_employee\"  for search employees");
+        System.out.println("");
     }
 
     public void createDBIfNotExists() throws SQLException {

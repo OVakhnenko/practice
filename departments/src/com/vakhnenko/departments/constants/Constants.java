@@ -10,6 +10,9 @@ public class Constants {
     public static final String UPDATE_COMMAND = "UPDATE";
     public static final String SAVE_COMMAND = "SAVE";
     public static final String READ_COMMAND = "READ";
+    public static final String ALL_COMMAND = "ALL";
+    public static final String SEARCH_COMMAND = "SEARCH";
+    public static final String TOP_COMMAND = "TOP";
 
     public static final String DEPARTMENT_KEY = "-D";
     public static final String EMPLOYEE_KEY = "-E";
@@ -78,9 +81,17 @@ public class Constants {
             + "where name = ";
     public static final String WHERE_DEPARTMENT_NAME_IS_EQUAL = " "
             + "where department_name = ";
-
+    public static final String WHERE_AGE_IS_EQUAL = " "
+            + "where age = ";
+    public static final String DEPARTMENT_IS_EQUAL = " "
+            + "department_name = ";
+    public static final String TYPE_IS_EQUAL = " "
+            + "type = ";
+    public static final String SELECT_ALL_FROM_DB_EMPLOYEE_WO = ""
+            + "select * from employee order by department_name";
+    public static final String SELECT_COUNT_FROM_DB_EMPLOYEE = ""
+            + "select count(*) as count from employee ";
     public static final String CLOSING_STRUCTURE = ")";
-
 
     private Constants() {
     }
