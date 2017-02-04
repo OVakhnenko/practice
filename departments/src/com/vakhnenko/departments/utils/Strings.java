@@ -5,6 +5,12 @@ public class Strings {
         return "'" + str + "' ";
     }
 
+    public static void printStringSetLength(String str, int length) {
+        StringBuffer buffer = new StringBuffer(str);
+        buffer.setLength(length);
+        System.out.print("" + buffer);
+    }
+
     public static String shrink(String command) {
         String result = command.toUpperCase().trim();
 

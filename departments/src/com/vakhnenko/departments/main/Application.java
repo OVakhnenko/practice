@@ -9,7 +9,7 @@ public class Application {
         try {
             departments.run();
         } catch (Exception e) {
-            System.out.println("Application error!");
+            System.out.println("Application error! " + e.getMessage());
         } finally {
             departments.done();
         }

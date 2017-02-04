@@ -249,12 +249,6 @@ public class DepartmentsJDBC extends Departments {
         }
     }
 
-    private void printStringSetLength(String str, int length) {
-        StringBuffer buffer = new StringBuffer(str);
-        buffer.setLength(length);
-        System.out.print("" + buffer);
-    }
-
     @Override
     public void openEntityWithName(String employeeName) {
         printEmployee(employeeName, USE_BR);
