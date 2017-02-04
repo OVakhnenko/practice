@@ -15,7 +15,7 @@ public class DepartmentsJDBC extends Departments {
     private Connection dbConnection = null;
     private Statement statement = null;
 
-    DepartmentsJDBC() throws SQLException {
+    public DepartmentsJDBC() throws SQLException {
         createDBIfNotExists();
     }
 
