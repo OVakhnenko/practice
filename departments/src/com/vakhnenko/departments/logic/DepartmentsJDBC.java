@@ -1,13 +1,14 @@
-package com.vakhnenko.departments.jdbc.main;
+package com.vakhnenko.departments.logic;
 
-import java.io.*;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vakhnenko.departments.main.*;
-
-import static com.vakhnenko.departments.jdbc.strings.Strings.*;
+import static com.vakhnenko.departments.utils.PrintHelper.*;
+import static com.vakhnenko.departments.utils.PrintHelper.printHelpExit;
+import static com.vakhnenko.departments.utils.PrintHelper.printHelpSomething;
+import static com.vakhnenko.departments.utils.Strings.*;
 import static com.vakhnenko.departments.constants.Constants.*;
 
 public class DepartmentsJDBC extends Departments {
@@ -27,7 +28,13 @@ public class DepartmentsJDBC extends Departments {
     public void readFromFile() {
     }
 
-    private void done() {
+    @Override
+    public void run() throws IOException {
+        super.run();
+    }
+
+    @Override
+    public void done() {
         closeMySQLDB();
     }
 
@@ -338,16 +345,12 @@ public class DepartmentsJDBC extends Departments {
         return result;
     }
 
-    @Override
-    public void printHelpReadSave() {
-    }
-
-    @Override
-    public void printHelpSomething() {
-        System.out.println("Type \"all\" for print list of all departments and employees");
-        System.out.println("Type \"search -e -a age_to_search -d department\" for search employees");
-        System.out.println("Type \"top -d -t type_of_employee\"  for search employees");
-        System.out.println("");
+    public void printHelp() {
+        printHelpCommandsList();
+        printHelpDepartment();
+        printHelpEmployee();
+        printHelpSomething();
+        printHelpExit();
     }
 
     public void createDBIfNotExists() throws SQLException {
@@ -415,24 +418,6 @@ public class DepartmentsJDBC extends Departments {
             } catch (SQLException e) {
                 System.out.println("MySQL error! DB connection not close!");
             }
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        DepartmentsJDBC departments = null;
-        try {
-            departments = new DepartmentsJDBC();
-        } catch (SQLException e) {
-            System.out.print("Error! ");
-            e.printStackTrace();
-        }
-        try {
-            departments.run();
-        } catch (Exception e) {
-            System.out.print("Error! ");
-            e.printStackTrace();
-        } finally {
-            departments.done();
         }
     }
 }

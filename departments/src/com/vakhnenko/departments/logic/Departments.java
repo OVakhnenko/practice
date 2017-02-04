@@ -1,10 +1,15 @@
-package com.vakhnenko.departments.main;
+package com.vakhnenko.departments.logic;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.PrintHelper.*;
+import static com.vakhnenko.departments.utils.Strings.*;
+import static com.vakhnenko.departments.utils.Arrays.*;
 
+import com.vakhnenko.departments.dao.DepartmentDAO;
+import com.vakhnenko.departments.dao.EmployeeDAO;
 import com.vakhnenko.departments.department.*;
 import com.vakhnenko.departments.employee.*;
 import com.vakhnenko.departments.entity.*;
@@ -53,6 +58,10 @@ public class Departments {
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
         readCommand("top -d -t m");*/
+    }
+
+    public void done() {
+        System.out.println("Bye!");
     }
 
     public boolean saveToFile() {
@@ -112,7 +121,6 @@ public class Departments {
 
         switch (commands[COMMAND_POSITION]) {
             case EXIT_COMMAND:
-                printBye();
                 return false;
             case HELP_COMMAND:
                 printHelp();
@@ -438,7 +446,7 @@ public class Departments {
         System.out.println("Error! Unknown command - \" type \"help\" for commands list");
     }
 
-    private void printTopEmployee(String[] commands) {
+    public void printTopEmployee(String[] commands) {
         String type = getKeyFromArray(commands, TYPE_EMPLOYEE_KEY);
         printTopEmployee(type);
     }
@@ -447,125 +455,11 @@ public class Departments {
         System.out.println("Error! Unknown command - \" type \"help\" for commands list");
     }
 
-    private void printFirstScreen() {
-        System.out.println("Departments and Employees");
-        System.out.println("Type \"help\" for commands list or type \"exit\" for exit");
-        System.out.println("");
-    }
-
-    private void printHelp() {
+    public void printHelp() {
         printHelpCommandsList();
         printHelpDepartment();
         printHelpEmployee();
         printHelpReadSave();
-        printHelpSomething();
         printHelpExit();
-    }
-
-    private void printHelpCommandsList() {
-        System.out.println("commanrds list:");
-        System.out.println("");
-    }
-
-    public void printHelpDepartment() {
-        System.out.println("type \"create -d department_name\" for create department \"department_name\"");
-        System.out.println("type \"rm -d department_name\" for remove department \"department_name\"");
-        System.out.println("type \"departments\" for print list of all departments");
-        System.out.println("");
-    }
-
-    private void printHelpEmployee() {
-        System.out.println("type \"create -e -n employee_name -t m -a age -m methodology\" for for create manager of");
-        System.out.println("type \"create -e -n employee_name -t d -a age -l language \" for for create developer");
-        System.out.println("type \"rm -e employee_name\" for remove employee \"employee_name\"");
-        System.out.println("type \"open -d department_name\" for watch department details");
-        System.out.println("type \"open -e employee_name\" for watch employee details");
-        System.out.println("");
-    }
-
-    public void printHelpReadSave() {
-        System.out.println("type \"save\" for save data to file");
-        System.out.println("type \"read\" for read data from file");
-        System.out.println("");
-    }
-
-    public void printHelpSomething() {
-    }
-
-    private void printHelpExit() {
-        System.out.println("type \"help\" for commands list");
-        System.out.println("type \"exit\" for exit");
-        System.out.println("");
-    }
-
-    private void printSyntaxError(String[] commands) {
-        System.out.println("Syntax Error! - \"" + getAllArrayStrings(commands) + "\" type \"help\" for commands list");
-    }
-
-    private void printBye() {
-        System.out.println("Bye!");
-    }
-
-    private String getAllArrayStrings(String[] strings) {
-        String result = "";
-        for (String string : strings) result += string;
-        return result;
-    }
-
-    private String getCommands(String[] commands, int index) {
-        if (index < commands.length) {
-            return commands[index];
-        } else {
-            return getAllArrayStrings(commands);
-        }
-    }
-
-    private int searchKeyInArray(String[] commands, String key) {
-        int result = -1;
-
-        for (int i = 0; i < commands.length; i++) {
-            if (commands[i].equals(key)) {
-                result = i;
-                break;
-            }
-        }
-        return result;
-    }
-
-    private String getKeyFromArray(String[] commands, String key) {
-        String result = "";
-        int index;
-
-        index = searchKeyInArray(commands, key);
-        if ((index != -1) && (index < commands.length - 1)) {
-            result = commands[index + 1];
-        }
-        return result;
-    }
-
-    public String getStringFromManyWords(String[] commands, int cindex) {
-        String result = "";
-
-        if (cindex == -1) {
-            return result;
-        }
-        if ((cindex + 1 < commands.length) && (!commands[cindex + 1].contains("-"))) {
-            result = commands[cindex + 1] + " " + getStringFromManyWords(commands, cindex + 1);
-        }
-        return result.trim();
-    }
-
-    private String shrink(String command) {
-        String result = command.toUpperCase().trim();
-
-        while (result.contains("  ")) {
-            result = result.replace("  ", " ");
-        }
-        return result;
-    }
-
-    public static void main(String[] args) throws IOException {
-        Departments departments = new Departments();
-        departments.run();
     }
 }

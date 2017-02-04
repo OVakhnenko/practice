@@ -1,4 +1,6 @@
-package com.vakhnenko.departments.entity;
+package com.vakhnenko.departments.dao;
+
+import com.vakhnenko.departments.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Collections;

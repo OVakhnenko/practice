@@ -7,10 +7,16 @@ import static com.vakhnenko.departments.constants.Constants.*;
 
 public class Developer extends Employee {
     private String language;
+    private static int developerID;
 
     public Developer(String name, String type, int age, String department, String language) {
         super(name, type, age, department);
         this.language = language;
+    }
+
+    @Override
+    public int getUniqeID() {
+        return developerID++;
     }
 
     public void setLanguage(String language) {

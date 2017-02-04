@@ -1,6 +1,6 @@
-package com.vakhnenko.departments.employee;
+package com.vakhnenko.departments.dao;
 
-import com.vakhnenko.departments.entity.EntityDAO;
+import com.vakhnenko.departments.employee.Employee;
 
 public class EmployeeDAO extends EntityDAO {
 

@@ -8,8 +8,15 @@ import static com.vakhnenko.departments.constants.Constants.*;
 import com.vakhnenko.departments.entity.*;
 
 public class Department extends Entity {
-    Department(String name) {
+    private static int departmentID;
+
+    public Department(String name) {
         super(name);
+    }
+
+    @Override
+    public int getUniqeID() {
+        return departmentID++;
     }
 
     public boolean save(FileWriter writer) throws IOException {

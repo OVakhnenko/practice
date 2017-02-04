@@ -3,11 +3,14 @@ package com.vakhnenko.departments.entity;
 public abstract class Entity {
     private int ID;
     private String name;
-    private static int uniqueID;
 
     public Entity(String name) {
         this.name = name;
-        this.ID = uniqueID++;
+        this.ID = getUniqeID();
+    }
+
+    public int getUniqeID() {
+        return 0;
     }
 
     public int getID() {
