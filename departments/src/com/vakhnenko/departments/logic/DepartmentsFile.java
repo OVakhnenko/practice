@@ -30,11 +30,11 @@ public class DepartmentsFile {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        /*while (noExit) {
+        while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }*/
-        readCommand("create -d 111 1111 11111");
+        }
+        /*readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
         readCommand("create -d 444 4444 44444");
@@ -57,7 +57,7 @@ public class DepartmentsFile {
         readCommand("all");
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
-        readCommand("top -d -t m");
+        readCommand("top -d -t m");*/
     }
 
     public void done() {
