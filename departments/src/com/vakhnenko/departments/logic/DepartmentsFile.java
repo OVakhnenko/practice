@@ -14,12 +14,12 @@ import com.vakhnenko.departments.department.*;
 import com.vakhnenko.departments.employee.*;
 import com.vakhnenko.departments.entity.*;
 
-public class Departments {
+public class DepartmentsFile {
     private String fileName = new File("").getAbsolutePath() + "\\departments.txt";
     private DepartmentDAO departmentDAO;
     private EmployeeDAO employeeDAO;
 
-    public Departments() {
+    public DepartmentsFile() {
         departmentDAO = new DepartmentDAO();
         employeeDAO = new EmployeeDAO();
     }
@@ -30,11 +30,11 @@ public class Departments {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        while (noExit) {
+        /*while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }
-        /*readCommand("create -d 111 1111 11111");
+        }*/
+        readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
         readCommand("create -d 444 4444 44444");
@@ -57,7 +57,7 @@ public class Departments {
         readCommand("all");
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
-        readCommand("top -d -t m");*/
+        readCommand("top -d -t m");
     }
 
     public void done() {
@@ -269,16 +269,12 @@ public class Departments {
     }
 
     public void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
-        Entity entity = new Manager(employeeName, type, age, departmentName, methodology);
-
-        employeeDAO.add(entity);
+        employeeDAO.add(new Manager(employeeName, type, age, departmentName, methodology));
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
-        Entity entity = new Developer(employeeName, type, age, departmentName, language);
-
-        employeeDAO.add(entity);
+        employeeDAO.add(new Developer(employeeName, type, age, departmentName, language));
         printEmployee(employeeName, NOT_USE_BR);
     }
 
@@ -358,7 +354,7 @@ public class Departments {
         if (tmp != null) {
             printEmployee(tmp.getName(), USE_BR);
         } else {
-            System.out.println(employeeDAO.getEmployeeStatus() + " \"" + employeeName + "\" not found!");
+            System.out.println(employeeDAO.getEntityStatus() + " \"" + employeeName + "\" not found!");
         }
     }
 

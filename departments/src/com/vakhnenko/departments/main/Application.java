@@ -1,11 +1,11 @@
 package com.vakhnenko.departments.main;
 
-import com.vakhnenko.departments.logic.Departments;
+import com.vakhnenko.departments.logic.DepartmentsFile;
 import com.vakhnenko.departments.logic.DepartmentsJDBC;
 
 public class Application {
     public static void main(String[] args) throws Exception {
-        Departments departments = new DepartmentsJDBC();
+        DepartmentsFile departments = new DepartmentsJDBC();
         try {
             departments.run();
         } catch (Exception e) {

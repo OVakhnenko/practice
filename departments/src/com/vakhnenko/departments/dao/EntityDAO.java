@@ -1,35 +1,33 @@
 package com.vakhnenko.departments.dao;
 
-import com.vakhnenko.departments.entity.Entity;
+import com.vakhnenko.departments.entity.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public abstract class EntityDAO {
-    protected List<Entity> employees = new ArrayList<>();
-    private String employeeStatus = "";
+public abstract class EntityDAO<T extends Entity> {
+    private List<T> list = new ArrayList<>();
+    private String entityStatus = "";
 
-    public void add(Entity entiny) {
-        employees.add(entiny);
+    public void add(T item) {
+        list.add(item);
     }
 
     public void delete(String name) {
-        Entity tmp;
+        T tmp;
 
         if ((tmp = search(name)) == null) {
-            System.out.println(employeeStatus + " \"" + name + "\" not found!");
+            System.out.println(getEntityStatus() + " \"" + name + "\" not found!");
         } else {
-            System.out.println(employeeStatus + " \"" + name + "\" removed.");
-            employees.remove(tmp);
+            System.out.println(getEntityStatus() + " \"" + name + "\" removed.");
+            list.remove(tmp);
         }
     }
 
-    public Entity search(String name) {
-        Entity result = null;
-        for (Entity employee : employees) {
-            if (employee.getName().equals(name)) {
-                result = employee;
+    public T search(String name) {
+        T result = null;
+        for (T item : list) {
+            if (item.getName().equals(name)) {
+                result = item;
                 break;
             }
         }
@@ -40,36 +38,34 @@ public abstract class EntityDAO {
         return search(name) != null;
     }
 
-    public void printAll() {
-        if (employees.size() > 0) {
-            for (Entity employee : employees) {
-                print(employee);
-            }
+    public int getSize() {
+        return list.size();
+    }
 
+    public List<T> getAll() {
+        return Collections.unmodifiableList(list);
+    }
+
+    public String getEntityStatus() {
+        return entityStatus;
+    }
+
+    public void setEntityStatus(String entityStatus) {
+        this.entityStatus = entityStatus;
+    }
+
+    public void printAll() {
+        if (list.size() > 0) {
+            for (T item : list) {
+                print(item);
+            }
         } else {
-            System.out.println("No " + employeeStatus.toLowerCase() +
-                    ". Type \"create\" for create first " + employeeStatus.toLowerCase() + ".");
+            System.out.println("Erroe! Employees not found!" +
+                    ". Type \"create\" for create first employee");
         }
     }
 
-    private void print(Entity employee) {
-        System.out.println(employeeStatus + " name \"" + employee.getName() + "\"");
-    }
-
-    public void setEmployeeStatus(String employeeStatus) {
-        this.employeeStatus = employeeStatus;
-    }
-
-    public String getEmployeeStatus() {
-        return employeeStatus;
-    }
-
-    public int getSize() {
-        return employees.size();
-    }
-
-    public List<Entity> getAll() {
-        return Collections.unmodifiableList(employees);
+    private void print(T employee) {
+        System.out.println(getEntityStatus() + " name \"" + employee.getName() + "\"");
     }
 }
-

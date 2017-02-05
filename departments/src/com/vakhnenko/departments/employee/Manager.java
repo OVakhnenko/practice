@@ -7,16 +7,10 @@ import static com.vakhnenko.departments.constants.Constants.*;
 
 public class Manager extends Employee {
     private String methodology;
-    private static int managerID;
 
     public Manager(String name, String type, int age, String department, String methodology) {
         super(name, type, age, department);
         this.methodology = methodology;
-    }
-
-    @Override
-    public int getUniqeID() {
-        return managerID++;
     }
 
     public void setMethodology(String methodology) {
@@ -27,6 +21,7 @@ public class Manager extends Employee {
         return methodology;
     }
 
+    @Override
     public boolean save(FileWriter writer) throws IOException {
         super.save(writer);
         try {

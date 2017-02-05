@@ -11,7 +11,7 @@ import static com.vakhnenko.departments.utils.PrintHelper.printHelpSomething;
 import static com.vakhnenko.departments.utils.Strings.*;
 import static com.vakhnenko.departments.constants.Constants.*;
 
-public class DepartmentsJDBC extends Departments {
+public class DepartmentsJDBC extends DepartmentsFile {
     private Connection dbConnection = null;
     private Statement statement = null;
 
