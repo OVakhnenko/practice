@@ -4,14 +4,16 @@ import com.vakhnenko.departments.entity.*;
 
 import java.util.*;
 
-public abstract class EntityDAO<T extends Entity> {
+public abstract class EntityDAO<T extends Entity> extends DAO<T> {
     private List<T> list = new ArrayList<>();
     private String entityStatus = "";
 
+    @Override
     public void add(T item) {
         list.add(item);
     }
 
+    @Override
     public void delete(String name) {
         T tmp;
 
@@ -23,6 +25,7 @@ public abstract class EntityDAO<T extends Entity> {
         }
     }
 
+    @Override
     public T search(String name) {
         T result = null;
         for (T item : list) {
@@ -38,10 +41,12 @@ public abstract class EntityDAO<T extends Entity> {
         return search(name) != null;
     }
 
+    @Override
     public int getSize() {
         return list.size();
     }
 
+    @Override
     public List<T> getAll() {
         return Collections.unmodifiableList(list);
     }
@@ -68,4 +73,6 @@ public abstract class EntityDAO<T extends Entity> {
     private void print(T employee) {
         System.out.println(getEntityStatus() + " name \"" + employee.getName() + "\"");
     }
+
+    abstract void done();
 }

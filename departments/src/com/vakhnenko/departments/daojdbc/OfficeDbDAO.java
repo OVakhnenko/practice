@@ -1,22 +1,29 @@
-package com.vakhnenko.departments.logic;
+package com.vakhnenko.departments.daojdbc;
 
-import java.io.IOException;
+import com.vakhnenko.departments.dao.*;
+import com.vakhnenko.departments.department.*;
+import com.vakhnenko.departments.employee.*;
+import com.vakhnenko.departments.utils.*;
+
+import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import static com.vakhnenko.departments.utils.PrintHelper.*;
-import static com.vakhnenko.departments.utils.PrintHelper.printHelpExit;
-import static com.vakhnenko.departments.utils.PrintHelper.printHelpSomething;
-import static com.vakhnenko.departments.utils.Strings.*;
 import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.PrintHelper.*;
+import static com.vakhnenko.departments.utils.Strings.*;
 
-public class DepartmentsJDBC extends DepartmentsFile {
-    private Connection dbConnection = null;
-    private Statement statement = null;
+/**
+ * Created for practice on 09.02.2017 22:33
+ */
+public class OfficeDbDAO extends OfficeDAO {
+    //only DAO here, not CONNECTIONS, no STATEMENTS
+    private DepartmentDAO departmentDAO;
+    private EmployeeDAO employeeDAO;
 
-    public DepartmentsJDBC() throws SQLException {
-        createDBIfNotExists();
+    public OfficeDbDAO() throws SQLException {
+        departmentDAO = new DepartmentDbDAO(ConnectionUtilJDBC.getDBConnection());
+        employeeDAO = new EmployeeDbDAO(ConnectionUtilJDBC.getDBConnection());
     }
 
     @Override
@@ -25,26 +32,13 @@ public class DepartmentsJDBC extends DepartmentsFile {
     }
 
     @Override
-    public void readFromFile() {
-    }
-
-    @Override
-    public void run() throws IOException {
-        super.run();
-    }
-
-    @Override
-    public void done() {
-        closeMySQLDB();
+    public List<String> readFromFile() {
+        return null;
     }
 
     @Override
     public void createDepartmentAndPrintAll(String name) {
-        if (departmentExists(name)) {
-            System.out.println("Error! Department " + name + " already exists!");
-        } else {
-            insertIntoDB(INSERT_INTO_DB_DEPERTMENT + swq(name) + CLOSING_STRUCTURE);
-        }
+        departmentDAO.create(name);
         printAllDepartments();
     }
 
@@ -53,12 +47,7 @@ public class DepartmentsJDBC extends DepartmentsFile {
         if (employeeExists(employeeName)) {
             System.out.println("Error! Manager " + employeeName + " already exists!");
         } else {
-            insertIntoDB(INSERT_INTO_DB_MANAGER
-                    + swq(employeeName) + ","
-                    + swq(Integer.toString(age)) + ","
-                    + swq(type) + ","
-                    + swq(departmentName) + ","
-                    + swq(methodology) + CLOSING_STRUCTURE);
+            employeeDAO.add(new Manager(employeeName, type, age, departmentName, methodology));
         }
         printEmployee(employeeName, NOT_USE_BR);
     }
@@ -68,12 +57,7 @@ public class DepartmentsJDBC extends DepartmentsFile {
         if (employeeExists(employeeName)) {
             System.out.println("Error! Developer " + employeeName + " already exists!");
         } else {
-            insertIntoDB(INSERT_INTO_DB_DEVELOPER
-                    + swq(employeeName) + ","
-                    + swq(Integer.toString(age)) + ","
-                    + swq(type) + ","
-                    + swq(departmentName) + ","
-                    + swq(language) + CLOSING_STRUCTURE);
+            employeeDAO.add(new Developer(employeeName, type, age, departmentName, language));
         }
         printEmployee(employeeName, NOT_USE_BR);
     }
@@ -115,33 +99,17 @@ public class DepartmentsJDBC extends DepartmentsFile {
     private void updateEmployee(String updateQuery, String employeeName) {
         String query = UPDATE_EMPLOYEE_DB_EMPLOYEE + updateQuery + WHERE_NAME_IS_EQUAL + employeeName;
         try {
+            //employeeDAO.save(new Employee(id, name, age ....))
+            //
             statement.execute(query);
         } catch (SQLException e) {
             System.out.println("MySQL error! " + query);
         }
     }
 
-    private boolean exists(String query) {
-        boolean result = false;
-
-        try {
-            ResultSet rs = statement.executeQuery(query);
-            if (rs.next())
-                result = true;
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + query);
-        }
-        return result;
-    }
-
     @Override
     public boolean departmentExists(String departmentName) {
-        return exists(SELECT_NAME_FROM_DB_DEPARTMENT + WHERE_NAME_IS_EQUAL + swq(departmentName));
-    }
-
-    @Override
-    public boolean employeeExists(String employeeName) {
-        return exists(SELECT_NAME_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(employeeName));
+        return departmentDAO.exists(departmentName);
     }
 
     @Override
@@ -166,15 +134,7 @@ public class DepartmentsJDBC extends DepartmentsFile {
 
     @Override
     public void printAllDepartments() {
-        try {
-            ResultSet rs = statement.executeQuery(SELECT_NAME_FROM_DB_DEPARTMENT);
-            while (rs.next()) {
-                String name = rs.getString("name");
-                System.out.println("name: " + name);
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + SELECT_NAME_FROM_DB_DEPARTMENT);
-        }
+        departmentDAO.printAll();
     }
 
     @Override
@@ -347,72 +307,11 @@ public class DepartmentsJDBC extends DepartmentsFile {
         printHelpExit();
     }
 
-    public void createDBIfNotExists() throws SQLException {
-        if (!(createMySQLDB(CREATE_DB_DEPARTMENT_IF_NOT_EXISTS, DEPARTMENT_TABLE_NAME)) ||
-                (!createMySQLDB(CREATE_DB_EMPLOYEE_IF_NOT_EXISTS, EMPLOYEE_TABLE_NAME))) {
-            System.out.println("MySQL error! Tables not created!");
-            System.exit(DB_CREATE_ERROR_EXIT_CODE);
-        }
+    @Override
+    public void done() {
+        departmentDAO.done();
+        employeeDAO.done();
     }
 
-    private boolean createMySQLDB(String createStatement, String bdName) throws SQLException {
-        boolean result = false;
-        try {
-            dbConnection = getDBConnection();
-            if (dbConnection == null) {
-                System.out.println("MySQL error! Connection is not established");
-            } else {
-                statement = dbConnection.createStatement();
-                statement.execute(createStatement);
-                System.out.println("Table \"" + bdName + "\" is created or exists!");
-                result = true;
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL error! Table \"" + bdName + "\" not created!");
-        }
-        return result;
-    }
-
-    private static Connection getDBConnection() {
-        Connection dbConnection = null;
-
-        try {
-            Class.forName(DB_DRIVER);
-        } catch (ClassNotFoundException e) {
-            System.out.println("MySQL error! MySQL driver not found!");
-        }
-        try {
-            dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
-            return dbConnection;
-        } catch (SQLException e) {
-            System.out.println("MySQL error! MySQL DB not connected!");
-        }
-        return dbConnection;
-    }
-
-    private void insertIntoDB(String query) {
-        try {
-            statement.execute(query);
-        } catch (SQLException e) {
-            System.out.println("MySQL error! Record not inserted!");
-        }
-    }
-
-    private void closeMySQLDB() {
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                System.out.println("MySQL error! DB statement not close!");
-            }
-        }
-        if (dbConnection != null) {
-            try {
-                dbConnection.close();
-            } catch (SQLException e) {
-                System.out.println("MySQL error! DB connection not close!");
-            }
-        }
-    }
 }
 

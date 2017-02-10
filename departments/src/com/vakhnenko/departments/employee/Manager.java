@@ -20,17 +20,4 @@ public class Manager extends Employee {
     public String getMethodology() {
         return methodology;
     }
-
-    @Override
-    public boolean save(FileWriter writer) throws IOException {
-        super.save(writer);
-        try {
-            writer.write(METHODOLOGY_EMPLOYEE_KEY + " " + getMethodology() + " ");
-            writer.flush();
-            return true;
-        } catch (IOException e) {
-            System.out.println("Write error!");
-            return false;
-        }
-    }
 }

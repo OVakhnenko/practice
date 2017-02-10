@@ -1,27 +1,20 @@
 package com.vakhnenko.departments.logic;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.vakhnenko.departments.constants.Constants.*;
 import static com.vakhnenko.departments.utils.PrintHelper.*;
 import static com.vakhnenko.departments.utils.Strings.*;
 import static com.vakhnenko.departments.utils.Arrays.*;
 
-import com.vakhnenko.departments.dao.DepartmentDAO;
-import com.vakhnenko.departments.dao.EmployeeDAO;
-import com.vakhnenko.departments.department.*;
-import com.vakhnenko.departments.employee.*;
-import com.vakhnenko.departments.entity.*;
+import com.vakhnenko.departments.dao.*;
 
-public class DepartmentsFile {
-    private String fileName = new File("").getAbsolutePath() + "\\departments.txt";
-    private DepartmentDAO departmentDAO;
-    private EmployeeDAO employeeDAO;
+public class DepartmentsApplication<T extends OfficeDAO> {
+    private T logic;
 
-    public DepartmentsFile() {
-        departmentDAO = new DepartmentDAO();
-        employeeDAO = new EmployeeDAO();
+    public DepartmentsApplication(T logic) {
+        this.logic = logic;
     }
 
     public void run() throws IOException {
@@ -61,61 +54,24 @@ public class DepartmentsFile {
     }
 
     public void done() {
-        System.out.println("Bye!");
+        logic.done();
     }
 
-    public boolean saveToFile() {
-        boolean saved = false;
+    public boolean saveToFile() throws IOException {
+        return logic.saveToFile();
+    }
 
-        if (departmentDAO.getSize() == 0) {
-            System.out.println("Error! No departments");
-        } else {
-            try (FileWriter writer = new FileWriter(fileName, false)) {
-                for (Entity department : departmentDAO.getAll()) {
-                    saved = ((Department) department).save(writer);
-                    if (!saved)
-                        return false;
-                }
-                for (Entity employee : employeeDAO.getAll()) {
-                    if (((Employee) employee).getType().equals(EMPLOYEE_MANAGER_TYPE)) {
-                        saved = ((Manager) employee).save(writer);
-                    } else {
-                        saved = ((Developer) employee).save(writer);
-                    }
-                    ((Employee) employee).writeln(writer);
-                    if (!saved)
-                        return false;
-                }
-                writer.close();
-            } catch (IOException e) {
-                System.out.println("Write error!");
-            }
-            if (saved) {
-                System.out.println("All data saved successfully");
+    public void readFromFile() throws IOException {
+        List<String> lines = logic.readFromFile();
+
+        if (lines != null) {
+            for (String line : lines) {
+                readCommand(line);
             }
         }
-        return true;
     }
 
-    public void readFromFile() {
-        if (departmentDAO.getSize() != 0) {
-            System.out.println("Error! Departments are exists");
-        } else {
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(fileName), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    readCommand(line);
-                }
-            } catch (IOException e) {
-                System.out.println("Read error!");
-            }
-        }
-
-    }
-
-    private boolean readCommand(String command) {
+    private boolean readCommand(String command) throws IOException {
         command = shrink(command);
         String[] commands = command.split(" ");
 
@@ -185,7 +141,7 @@ public class DepartmentsFile {
     }
 
     public void createDepartmentAndPrintAll(String name) {
-        departmentDAO.create(name);
+        logic.createDepartmentAndPrintAll(name);
         printAllDepartments();
     }
 
@@ -269,30 +225,22 @@ public class DepartmentsFile {
     }
 
     public void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
-        employeeDAO.add(new Manager(employeeName, type, age, departmentName, methodology));
+        logic.createManagerAndPrint(employeeName, type, age, departmentName, methodology);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
-        employeeDAO.add(new Developer(employeeName, type, age, departmentName, language));
+        logic.createDeveloperAndPrint(employeeName, type, age, departmentName, language);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
-        Entity entity = employeeDAO.search(employeeName);
-
-        ((Manager) entity).setAge(age);
-        ((Manager) entity).setMethodology(methodology);
-        ((Manager) entity).setDepartment(departmentName);
+        logic.updateManagerAndPrint(employeeName, age, departmentName, methodology);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
-        Entity entity = employeeDAO.search(employeeName);
-
-        ((Developer) entity).setAge(age);
-        ((Developer) entity).setLanguage(language);
-        ((Developer) entity).setDepartment(departmentName);
+        logic.updateDeveloperAndPrint(employeeName, age, departmentName, language);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
@@ -311,13 +259,21 @@ public class DepartmentsFile {
 
     private void removeDepartment(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        departmentDAO.delete(name);
+        remoteDepartmentAndPrint(name);
+    }
+
+    public void remoteDepartmentAndPrint(String name) {
+        logic.remoteDepartmentAndPrint(name);
         printAllDepartments();
     }
 
     private void removeEmployee(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        employeeDAO.delete(name);
+        remoteEmployeeAndPrint(name);
+    }
+
+    public void remoteEmployeeAndPrint(String name) {
+        logic.remoteEmployeeAndPrint(name);
     }
 
     private void open(String[] commands) {
@@ -349,13 +305,7 @@ public class DepartmentsFile {
     }
 
     public void openEntityWithName(String employeeName) {
-        Entity tmp = employeeDAO.search(employeeName);
-
-        if (tmp != null) {
-            printEmployee(tmp.getName(), USE_BR);
-        } else {
-            System.out.println(employeeDAO.getEntityStatus() + " \"" + employeeName + "\" not found!");
-        }
+        logic.openEntityWithName(employeeName);
     }
 
     private void update(String[] commands) {
@@ -369,55 +319,31 @@ public class DepartmentsFile {
     }
 
     public boolean departmentExists(String departmentName) {
-        return departmentDAO.exists(departmentName);
+        return logic.departmentExists(departmentName);
     }
 
     public boolean employeeExists(String employeeName) {
-        return employeeDAO.exists(employeeName);
+        return logic.employeeExists(employeeName);
     }
 
     public String getTypeEmployee(String employeeName) {
-        Entity entity = employeeDAO.search(employeeName);
-        return ((Employee) entity).getType();
+        return logic.getTypeEmployee(employeeName);
     }
 
-    public void printAllEmployee(String department) {
-
-        for (Entity employee : employeeDAO.getAll()) {
-            if (((Employee) employee).getDepartment().equals(department))
-                printEmployee(employee.getName(), NOT_USE_BR);
-        }
+    public void printAllEmployee(String employeeName) {
+        logic.printAllEmployee(employeeName);
     }
 
     public void printAllDepartments() {
-        departmentDAO.printAll();
+        logic.printAllDepartments();
     }
 
     public void printEmployee(String employeeName, boolean use_br) {
-        Entity entity = employeeDAO.search(employeeName);
-
-        if (entity != null) {
-            System.out.print("Name " + entity.getName() + " " + ((use_br) ? "\n" : ""));
-            System.out.print("ID " + entity.getID() + " " + ((use_br) ? "\n" : ""));
-
-            System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
-            System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
-
-            if (entity.getClass().getName().equals("com.vakhnenko.departments.Manager")) {
-                System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
-                System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
-            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.Developer")) {
-                System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
-                System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
-            }
-            System.out.println();
-        } else {
-            System.out.println("The employee \"" + employeeName + "\" not found");
-        }
+        logic.printEmployee(employeeName, use_br);
     }
 
     public void printAll() {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        logic.printAll();
     }
 
     private void printSearchedEmployee(String[] commands) {
@@ -439,16 +365,16 @@ public class DepartmentsFile {
     }
 
     public void printSearchedEmployeeAge(String departmentName, int age) {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        logic.printSearchedEmployeeAge(departmentName, age);
     }
 
-    public void printTopEmployee(String[] commands) {
+    private void printTopEmployee(String[] commands) {
         String type = getKeyFromArray(commands, TYPE_EMPLOYEE_KEY);
         printTopEmployee(type);
     }
 
     public void printTopEmployee(String type) {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        logic.printTopEmployee(type);
     }
 
     public void printHelp() {

@@ -1,11 +1,12 @@
 package com.vakhnenko.departments.main;
 
-import com.vakhnenko.departments.logic.DepartmentsFile;
-import com.vakhnenko.departments.logic.DepartmentsJDBC;
+import com.vakhnenko.departments.daofile.*;
+import com.vakhnenko.departments.daojdbc.*;
+import com.vakhnenko.departments.logic.*;
 
 public class Application {
     public static void main(String[] args) throws Exception {
-        DepartmentsFile departments = new DepartmentsJDBC();
+        DepartmentsApplication departments = new DepartmentsApplication(new OfficeDbDAO());
         try {
             departments.run();
         } catch (Exception e) {

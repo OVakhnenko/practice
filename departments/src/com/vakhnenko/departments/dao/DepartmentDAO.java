@@ -15,4 +15,7 @@ public class DepartmentDAO extends EntityDAO<Department> {
             add(new Department(name));
         }
     }
+
+    public void done() {
+    }
 }

@@ -18,15 +18,4 @@ public class Department extends Entity {
     public int getUniqeID() {
         return departmentID++;
     }
-
-    public boolean save(FileWriter writer) throws IOException {
-        try {
-            writer.write(CREATE_COMMAND + " " + DEPARTMENT_KEY + " " + getName() + "\n");
-            writer.flush();
-            return true;
-        } catch (IOException e) {
-            System.out.println("Write error!");
-            return false;
-        }
-    }
 }

@@ -34,12 +34,16 @@ public class Constants {
     public static final boolean CREATE_EMPLOYEE = false;
     public static final boolean UPDATE_EMPLOYEE = true;
 
+    public static final String FILE_DAO_FILE_NAME = "\"departments.txt";
+
     public static final String DB_DRIVER = "com.mysql.jdbc.Driver"; //"oracle.jdbc.driver.OracleDriver";
     public static final String DB_CONNECTION = "jdbc:mysql://localhost:3306/departments";
     public static final String DB_USER = "root";
     public static final String DB_PASSWORD = "oJ0K58fE29kZhgXcQQV7";
 
     public static final int DB_CREATE_ERROR_EXIT_CODE = -1;
+    public static final int DB_DRIVER_ERROR_EXIT_CODE = -2;
+    public static final int DB_CONNECTION_ERROR_EXIT_CODE = -3;
 
     public static final String DEPARTMENT_TABLE_NAME = "department";
     public static final String EMPLOYEE_TABLE_NAME = "employee";

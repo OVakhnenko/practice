@@ -20,17 +20,4 @@ public class Developer extends Employee {
     public String getLanguage() {
         return language;
     }
-
-    @Override
-    public boolean save(FileWriter writer) throws IOException {
-        super.save(writer);
-        try {
-            writer.write(LANGUAGE_EMPLOYEE_KEY + " " + getLanguage() + " ");
-            writer.flush();
-            return true;
-        } catch (IOException e) {
-            System.out.println("Write error!");
-            return false;
-        }
-    }
 }
