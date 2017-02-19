@@ -1,6 +1,7 @@
 package com.vakhnenko.departments.daofile;
 
 import com.vakhnenko.departments.dao.*;
+import com.vakhnenko.departments.daojdbc.*;
 import com.vakhnenko.departments.department.*;
 import com.vakhnenko.departments.employee.*;
 import com.vakhnenko.departments.entity.*;
@@ -15,13 +16,13 @@ import static com.vakhnenko.departments.constants.Constants.*;
 /**
  * Created for practice on 09.02.2017 21:07
  */
-public class OfficeFileDAO extends OfficeDAO {
+public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO> {
     private DepartmentFileDAO departmentDAO;
-    private EmployeeFileDAO employeeDAO;
+    private EmployeeFileDAO<Employee> employeeDAO;
 
     public OfficeFileDAO() {
-        departmentDAO = new DepartmentFileDAO();
-        employeeDAO = new EmployeeFileDAO();
+        setDepartmentDAO(departmentDAO = new DepartmentFileDAO());
+        setEmployeeDAO(employeeDAO = new EmployeeFileDAO<Employee>());
     }
 
     @Override
@@ -37,8 +38,8 @@ public class OfficeFileDAO extends OfficeDAO {
                 if (!saved)
                     return false;
             }
-            for (Entity employee : employeeDAO.getAll()) {
-                if (((Employee) employee).getType().equals(EMPLOYEE_MANAGER_TYPE)) {
+            for (Employee employee : employeeDAO.getAll()) {
+                if (employee.getType().equals(EMPLOYEE_MANAGER_TYPE)) {
                     saved = employeeDAO.save((Manager) employee, writer);
                 } else {
                     saved = employeeDAO.save((Developer) employee, writer);
@@ -74,96 +75,13 @@ public class OfficeFileDAO extends OfficeDAO {
     }
 
     @Override
-    public void createDepartmentAndPrintAll(String name) {
-        departmentDAO.create(name);
-        printAllDepartments();
-    }
-
-    @Override
-    public void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
-        if (employeeExists(employeeName)) {
-            System.out.println("Error! Manager " + employeeName + " already exists!");
-        } else {
-            employeeDAO.add(new Manager(employeeName, type, age, departmentName, methodology));
-        }
-        printEmployee(employeeName, NOT_USE_BR);
-    }
-
-    @Override
-    public void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
-        if (employeeExists(employeeName)) {
-            System.out.println("Error! Developer " + employeeName + " already exists!");
-        } else {
-            employeeDAO.add(new Developer(employeeName, type, age, departmentName, language));
-        }
-        printEmployee(employeeName, NOT_USE_BR);
-    }
-
-    @Override
-    public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
-        Entity entity = employeeDAO.search(employeeName);
-
-        ((Manager) entity).setAge(age);
-        ((Manager) entity).setMethodology(methodology);
-        ((Manager) entity).setDepartment(departmentName);
-        printEmployee(employeeName, NOT_USE_BR);
-    }
-
-    @Override
-    public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
-        Entity entity = employeeDAO.search(employeeName);
-
-        ((Developer) entity).setAge(age);
-        ((Developer) entity).setLanguage(language);
-        ((Developer) entity).setDepartment(departmentName);
-        printEmployee(employeeName, NOT_USE_BR);
-    }
-
-    @Override
-    public void remoteDepartmentAndPrint(String name) {
-        departmentDAO.delete(name);
-    }
-
-    @Override
-    public void remoteEmployeeAndPrint(String name) {
-        employeeDAO.delete(name);
-    }
-
-    @Override
-    public void openEntityWithName(String employeeName) {
-        Entity tmp = employeeDAO.search(employeeName);
-
-        if (tmp != null) {
-            printEmployee(tmp.getName(), USE_BR);
-        } else {
-            System.out.println(employeeDAO.getEntityStatus() + " \"" + employeeName + "\" not found!");
-        }
-    }
-
-    @Override
-    public boolean departmentExists(String departmentName) {
-        return departmentDAO.exists(departmentName);
-    }
-
-    @Override
-    public boolean employeeExists(String employeeName) {
-        return employeeDAO.exists(employeeName);
-    }
-
-    @Override
     public String getTypeEmployee(String employeeName) {
-        Entity entity = employeeDAO.search(employeeName);
-        return ((Employee) entity).getType();
-    }
-
-    @Override
-    public void printAllDepartments() {
-        departmentDAO.printAll();
+        Employee employee = employeeDAO.search(employeeName);
+        return (employee != null) ? employee.getType() : "";
     }
 
     @Override
     public void printAllEmployee(String department) {
-
         for (Entity employee : employeeDAO.getAll()) {
             if (((Employee) employee).getDepartment().equals(department))
                 printEmployee(employee.getName(), NOT_USE_BR);
@@ -181,10 +99,10 @@ public class OfficeFileDAO extends OfficeDAO {
             System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
             System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
 
-            if (entity.getClass().getName().equals("com.vakhnenko.departments.Manager")) {
+            if (entity.getClass().getName().equals("com.vakhnenko.departments.employee.Manager")) {
                 System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
                 System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
-            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.Developer")) {
+            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.employee.Developer")) {
                 System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
                 System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
             }

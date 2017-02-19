@@ -1,6 +1,7 @@
 package com.vakhnenko.departments.daojdbc;
 
 import com.vakhnenko.departments.dao.*;
+import com.vakhnenko.departments.daofile.DepartmentFileDAO;
 import com.vakhnenko.departments.department.*;
 import com.vakhnenko.departments.employee.*;
 
@@ -13,7 +14,7 @@ import java.sql.*;
 /**
  * Created for practice on 10.02.2017 10:20
  */
-public class DepartmentDbDAO extends DepartmentDAO {
+public class DepartmentDbDAO extends DepartmentFileDAO {
     private Connection dbConnection;
     private Statement statement;
 
@@ -32,8 +33,19 @@ public class DepartmentDbDAO extends DepartmentDAO {
     }
 
     @Override
-    public boolean exists(String Name) {
-        String query = SELECT_NAME_FROM_DB_DEPARTMENT + WHERE_NAME_IS_EQUAL + swq(Name);
+    public void delete(String name) {
+        String query = DELETE_FROM_DB_DEPERTMENT + WHERE_NAME_IS_EQUAL + swq(name);
+
+        try {
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+    }
+
+    @Override
+    public boolean exists(String name) {
+        String query = SELECT_NAME_FROM_DB_DEPARTMENT + WHERE_NAME_IS_EQUAL + swq(name);
         boolean result = false;
 
         try {

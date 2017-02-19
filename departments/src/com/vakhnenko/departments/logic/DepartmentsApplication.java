@@ -11,10 +11,10 @@ import static com.vakhnenko.departments.utils.Arrays.*;
 import com.vakhnenko.departments.dao.*;
 
 public class DepartmentsApplication<T extends OfficeDAO> {
-    private T logic;
+    private T office;
 
-    public DepartmentsApplication(T logic) {
-        this.logic = logic;
+    public DepartmentsApplication(T office) {
+        this.office = office;
     }
 
     public void run() throws IOException {
@@ -23,11 +23,12 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        while (noExit) {
+        /*while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }
-        /*readCommand("create -d 111 1111 11111");
+        }*/
+        readCommand("create -d 111 1111 11111");
+        readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
         readCommand("create -d 444 4444 44444");
@@ -50,19 +51,20 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         readCommand("all");
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
-        readCommand("top -d -t m");*/
+        readCommand("top -d -t m");
+        readCommand("save");
     }
 
     public void done() {
-        logic.done();
+        office.done();
     }
 
     public boolean saveToFile() throws IOException {
-        return logic.saveToFile();
+        return office.saveToFile();
     }
 
     public void readFromFile() throws IOException {
-        List<String> lines = logic.readFromFile();
+        List<String> lines = office.readFromFile();
 
         if (lines != null) {
             for (String line : lines) {
@@ -134,15 +136,11 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
 
         if (!name.equals("")) {
-            createDepartmentAndPrintAll(name);
+            office.createDepartment(name);
+            office.printAllDepartments();
         } else {
             System.out.println("Error! Name is empty");
         }
-    }
-
-    public void createDepartmentAndPrintAll(String name) {
-        logic.createDepartmentAndPrintAll(name);
-        printAllDepartments();
     }
 
     private void createEmployee(String[] commands, boolean update) {
@@ -225,22 +223,22 @@ public class DepartmentsApplication<T extends OfficeDAO> {
     }
 
     public void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
-        logic.createManagerAndPrint(employeeName, type, age, departmentName, methodology);
+        office.createManager(employeeName, type, age, departmentName, methodology);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
-        logic.createDeveloperAndPrint(employeeName, type, age, departmentName, language);
+        office.createDeveloper(employeeName, type, age, departmentName, language);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
-        logic.updateManagerAndPrint(employeeName, age, departmentName, methodology);
+        office.updateManager(employeeName, age, departmentName, methodology);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
     public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
-        logic.updateDeveloperAndPrint(employeeName, age, departmentName, language);
+        office.updateDeveloper(employeeName, age, departmentName, language);
         printEmployee(employeeName, NOT_USE_BR);
     }
 
@@ -259,21 +257,13 @@ public class DepartmentsApplication<T extends OfficeDAO> {
 
     private void removeDepartment(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        remoteDepartmentAndPrint(name);
-    }
-
-    public void remoteDepartmentAndPrint(String name) {
-        logic.remoteDepartmentAndPrint(name);
+        office.removeDepartment(name);
         printAllDepartments();
     }
 
     private void removeEmployee(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        remoteEmployeeAndPrint(name);
-    }
-
-    public void remoteEmployeeAndPrint(String name) {
-        logic.remoteEmployeeAndPrint(name);
+        office.removeEmployee(name);
     }
 
     private void open(String[] commands) {
@@ -301,11 +291,7 @@ public class DepartmentsApplication<T extends OfficeDAO> {
 
     private void openEmployee(String[] commands) {
         String employeeName = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        openEntityWithName(employeeName);
-    }
-
-    public void openEntityWithName(String employeeName) {
-        logic.openEntityWithName(employeeName);
+        office.openEntityWithName(employeeName);
     }
 
     private void update(String[] commands) {
@@ -319,31 +305,31 @@ public class DepartmentsApplication<T extends OfficeDAO> {
     }
 
     public boolean departmentExists(String departmentName) {
-        return logic.departmentExists(departmentName);
+        return office.departmentExists(departmentName);
     }
 
     public boolean employeeExists(String employeeName) {
-        return logic.employeeExists(employeeName);
+        return office.employeeExists(employeeName);
     }
 
     public String getTypeEmployee(String employeeName) {
-        return logic.getTypeEmployee(employeeName);
+        return office.getTypeEmployee(employeeName);
     }
 
     public void printAllEmployee(String employeeName) {
-        logic.printAllEmployee(employeeName);
+        office.printAllEmployee(employeeName);
     }
 
     public void printAllDepartments() {
-        logic.printAllDepartments();
+        office.printAllDepartments();
     }
 
     public void printEmployee(String employeeName, boolean use_br) {
-        logic.printEmployee(employeeName, use_br);
+        office.printEmployee(employeeName, use_br);
     }
 
     public void printAll() {
-        logic.printAll();
+        office.printAll();
     }
 
     private void printSearchedEmployee(String[] commands) {
@@ -358,23 +344,15 @@ public class DepartmentsApplication<T extends OfficeDAO> {
             } catch (NumberFormatException e) {
                 age = 0;
             }
-            printSearchedEmployeeAge(departmentName, age);
+            office.printSearchedEmployeeAge(departmentName, age);
         } else {
             System.out.println("Error! Unknown command - \" type \"help\" for commands list");
         }
     }
 
-    public void printSearchedEmployeeAge(String departmentName, int age) {
-        logic.printSearchedEmployeeAge(departmentName, age);
-    }
-
     private void printTopEmployee(String[] commands) {
         String type = getKeyFromArray(commands, TYPE_EMPLOYEE_KEY);
-        printTopEmployee(type);
-    }
-
-    public void printTopEmployee(String type) {
-        logic.printTopEmployee(type);
+        office.printTopEmployee(type);
     }
 
     public void printHelp() {

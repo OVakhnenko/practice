@@ -34,7 +34,7 @@ public class Constants {
     public static final boolean CREATE_EMPLOYEE = false;
     public static final boolean UPDATE_EMPLOYEE = true;
 
-    public static final String FILE_DAO_FILE_NAME = "\"departments.txt";
+    public static final String FILE_DAO_FILE_NAME = "\\departments.txt";
 
     public static final String DB_DRIVER = "com.mysql.jdbc.Driver"; //"oracle.jdbc.driver.OracleDriver";
     public static final String DB_CONNECTION = "jdbc:mysql://localhost:3306/departments";
@@ -65,12 +65,19 @@ public class Constants {
             + "language varchar(20) not null default '' ,"
             + "primary key (id)"
             + ")engine = innodb";
+
     public static final String INSERT_INTO_DB_DEPERTMENT = ""
             + "insert into department (name) values (";
     public static final String INSERT_INTO_DB_MANAGER = ""
             + "insert into employee (name, age, type, department_name, methodology) values (";
     public static final String INSERT_INTO_DB_DEVELOPER = ""
             + "insert into employee (name, age, type, department_name, language) values (";
+
+    public static final String DELETE_FROM_DB_DEPERTMENT = ""
+            + "delete from department ";
+    public static final String DELETE_FROM_DB_EMPLOYEE = ""
+            + "delete from employee ";
+
     public static final String SELECT_NAME_FROM_DB_DEPARTMENT = ""
             + "select name from department ";
     public static final String SELECT_NAME_FROM_DB_EMPLOYEE = ""
@@ -79,8 +86,15 @@ public class Constants {
             + "select type from employee ";
     public static final String SELECT_ALL_FROM_DB_EMPLOYEE = ""
             + "select name, age, type, department_name, methodology, language from employee ";
+    public static final String SELECT_ALL_FROM_DB_EMPLOYEE_WO = ""
+            + "select * from employee order by department_name";
+    public static final String SELECT_COUNT_FROM_DB_EMPLOYEE = ""
+            + "select count(*) as count from employee ";
+    public static final String CLOSING_STRUCTURE = ")";
+
     public static final String UPDATE_EMPLOYEE_DB_EMPLOYEE = ""
             + "update employee set ";
+
     public static final String WHERE_NAME_IS_EQUAL = " "
             + "where name = ";
     public static final String WHERE_DEPARTMENT_NAME_IS_EQUAL = " "
@@ -91,11 +105,6 @@ public class Constants {
             + "department_name = ";
     public static final String TYPE_IS_EQUAL = " "
             + "type = ";
-    public static final String SELECT_ALL_FROM_DB_EMPLOYEE_WO = ""
-            + "select * from employee order by department_name";
-    public static final String SELECT_COUNT_FROM_DB_EMPLOYEE = ""
-            + "select count(*) as count from employee ";
-    public static final String CLOSING_STRUCTURE = ")";
 
     private Constants() {
     }

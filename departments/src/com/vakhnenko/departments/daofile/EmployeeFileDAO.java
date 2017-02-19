@@ -11,7 +11,19 @@ import static com.vakhnenko.departments.constants.Constants.*;
 /**
  * Created for practice on 10.02.2017 9:36
  */
-public class EmployeeFileDAO extends EmployeeDAO<Employee> {
+public class EmployeeFileDAO<T extends Employee> extends EmployeeDAO<T> {
+    public void update(String employeeName, int age, String departmentName, String methodology, String language) {
+        Employee employee = search(employeeName);
+
+        if (employee != null) {
+            if (age > 0) employee.setAge(age);
+            if (!departmentName.equals("")) employee.setDepartment(departmentName);
+            if (!methodology.equals("")) ((Manager) employee).setMethodology(methodology);
+            if (!language.equals("")) ((Developer) employee).setLanguage(language);
+        } else {
+            System.out.println("Error! Employee " + employeeName + " not founf!");
+        }
+    }
 
     public boolean save(Employee employee, FileWriter writer) throws IOException {
         String type;
