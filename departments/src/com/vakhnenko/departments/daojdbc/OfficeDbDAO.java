@@ -20,7 +20,7 @@ public class OfficeDbDAO extends OfficeFileDAO {
     public OfficeDbDAO() {
         try {
             setDepartmentDAO(departmentDAO = new DepartmentDbDAO(ConnectionUtilJDBC.getDBConnection()));
-            setEmployeeDAO(employeeDAO = new EmployeeDbDAO<Employee>(ConnectionUtilJDBC.getDBConnection()));
+            setEmployeeDAO(employeeDAO = new EmployeeDbDAO<>(ConnectionUtilJDBC.getDBConnection()));
         } catch (SQLException e) {
             System.out.println("Set DAO error! " + e.getMessage());
         }
@@ -28,13 +28,13 @@ public class OfficeDbDAO extends OfficeFileDAO {
 
     @Override
     public boolean saveToFile() {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        System.out.println("Error! Unknown command - type \"help\" for commands list");
         return false;
     }
 
     @Override
     public List<String> readFromFile() {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        System.out.println("Error! Unknown command - type \"help\" for commands list");
         return null;
     }
 

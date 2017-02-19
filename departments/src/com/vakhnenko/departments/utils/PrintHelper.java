@@ -1,8 +1,7 @@
 package com.vakhnenko.departments.utils;
 
-import static com.vakhnenko.departments.constants.Constants.TYPE_EMPLOYEE_KEY;
-import static com.vakhnenko.departments.utils.Arrays.getAllArrayStrings;
-import static com.vakhnenko.departments.utils.Arrays.getKeyFromArray;
+import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Arrays.*;
 
 public class PrintHelper {
 

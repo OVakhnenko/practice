@@ -1,14 +1,12 @@
 package com.vakhnenko.departments.daofile;
 
 import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.daojdbc.*;
 import com.vakhnenko.departments.department.*;
 import com.vakhnenko.departments.employee.*;
 import com.vakhnenko.departments.entity.*;
 import com.vakhnenko.departments.utils.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.vakhnenko.departments.constants.Constants.*;
@@ -22,7 +20,7 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
 
     public OfficeFileDAO() {
         setDepartmentDAO(departmentDAO = new DepartmentFileDAO());
-        setEmployeeDAO(employeeDAO = new EmployeeFileDAO<Employee>());
+        setEmployeeDAO(employeeDAO = new EmployeeFileDAO<>());
     }
 
     @Override
@@ -39,14 +37,9 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
                     return false;
             }
             for (Employee employee : employeeDAO.getAll()) {
-                if (employee.getType().equals(EMPLOYEE_MANAGER_TYPE)) {
-                    saved = employeeDAO.save((Manager) employee, writer);
-                } else {
-                    saved = employeeDAO.save((Developer) employee, writer);
-                }
+                saved = employeeDAO.save(employee, writer);
                 employeeDAO.writeln(writer);
-                if (!saved)
-                    return false;
+                if (!saved) return false;
             }
             writer.close();
             if (saved) {
@@ -59,7 +52,7 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
     @Override
     public List<String> readFromFile() throws IOException {
         BufferedReader reader = ConnectionUtilFile.getFileConnectionReader();
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         String line;
 
         if (departmentDAO.getSize() != 0) {
@@ -114,17 +107,17 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
 
     @Override
     public void printAll() {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        System.out.println("Error! Unknown command - type \"help\" for commands list");
     }
 
     @Override
     public void printSearchedEmployeeAge(String departmentName, int age) {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        System.out.println("Error! Unknown command - type \"help\" for commands list");
     }
 
     @Override
     public void printTopEmployee(String type) {
-        System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        System.out.println("Error! Unknown command - type \"help\" for commands list");
     }
 
     @Override

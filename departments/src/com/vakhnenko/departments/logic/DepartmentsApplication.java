@@ -23,11 +23,11 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        /*while (noExit) {
+        while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }*/
-        readCommand("create -d 111 1111 11111");
+        }
+        /*readCommand("create -d 111 1111 11111");
         readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
@@ -52,18 +52,18 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
         readCommand("top -d -t m");
-        readCommand("save");
+        readCommand("save");*/
     }
 
     public void done() {
         office.done();
     }
 
-    public boolean saveToFile() throws IOException {
+    private boolean saveToFile() throws IOException {
         return office.saveToFile();
     }
 
-    public void readFromFile() throws IOException {
+    private void readFromFile() throws IOException {
         List<String> lines = office.readFromFile();
 
         if (lines != null) {
@@ -96,10 +96,10 @@ public class DepartmentsApplication<T extends OfficeDAO> {
                 remove(commands);
                 break;
             case PRINT_ALL_DEPARTMENTS_COMMAND:
-                printAllDepartments();
+                office.printAllDepartments();
                 break;
             case ALL_COMMAND:
-                printAll();
+                office.printAll();
                 break;
             case SEARCH_COMMAND:
                 printSearchedEmployee(commands);
@@ -156,14 +156,14 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         }
 
         if (update) {
-            if (!employeeExists(employeeName)) {
+            if (!office.employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" not found");
                 return;
             } else {
-                type = getTypeEmployee(employeeName);
+                type = office.getTypeEmployee(employeeName);
             }
         } else {
-            if (employeeExists(employeeName)) {
+            if (office.employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" already exists");
                 return;
             }
@@ -178,9 +178,9 @@ public class DepartmentsApplication<T extends OfficeDAO> {
                 System.out.println("Error! Department is empty");
                 return;
             }
-            if (!departmentExists(departmentName)) {
+            if (!office.departmentExists(departmentName)) {
                 System.out.println("Error! Department not exists!");
-                printAllDepartments();
+                office.printAllDepartments();
                 return;
             }
         }
@@ -222,24 +222,24 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         }
     }
 
-    public void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
+    private void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
         office.createManager(employeeName, type, age, departmentName, methodology);
-        printEmployee(employeeName, NOT_USE_BR);
+        office.printEmployee(employeeName, NOT_USE_BR);
     }
 
-    public void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
+    private void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
         office.createDeveloper(employeeName, type, age, departmentName, language);
-        printEmployee(employeeName, NOT_USE_BR);
+        office.printEmployee(employeeName, NOT_USE_BR);
     }
 
-    public void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
+    private void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
         office.updateManager(employeeName, age, departmentName, methodology);
-        printEmployee(employeeName, NOT_USE_BR);
+        office.printEmployee(employeeName, NOT_USE_BR);
     }
 
-    public void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
+    private void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
         office.updateDeveloper(employeeName, age, departmentName, language);
-        printEmployee(employeeName, NOT_USE_BR);
+        office.printEmployee(employeeName, NOT_USE_BR);
     }
 
     private void remove(String[] commands) {
@@ -258,7 +258,7 @@ public class DepartmentsApplication<T extends OfficeDAO> {
     private void removeDepartment(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
         office.removeDepartment(name);
-        printAllDepartments();
+        office.printAllDepartments();
     }
 
     private void removeEmployee(String[] commands) {
@@ -283,7 +283,7 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         String departmentName = getStringFromManyWords(commands, FIRST_KEY_POSITION);
 
         if (!departmentName.equals("")) {
-            printAllEmployee(departmentName);
+            office.printAllEmployee(departmentName);
         } else {
             System.out.println("Error! Name is empty");
         }
@@ -302,34 +302,6 @@ public class DepartmentsApplication<T extends OfficeDAO> {
             default:
                 printSyntaxError(commands);
         }
-    }
-
-    public boolean departmentExists(String departmentName) {
-        return office.departmentExists(departmentName);
-    }
-
-    public boolean employeeExists(String employeeName) {
-        return office.employeeExists(employeeName);
-    }
-
-    public String getTypeEmployee(String employeeName) {
-        return office.getTypeEmployee(employeeName);
-    }
-
-    public void printAllEmployee(String employeeName) {
-        office.printAllEmployee(employeeName);
-    }
-
-    public void printAllDepartments() {
-        office.printAllDepartments();
-    }
-
-    public void printEmployee(String employeeName, boolean use_br) {
-        office.printEmployee(employeeName, use_br);
-    }
-
-    public void printAll() {
-        office.printAll();
     }
 
     private void printSearchedEmployee(String[] commands) {
@@ -355,7 +327,7 @@ public class DepartmentsApplication<T extends OfficeDAO> {
         office.printTopEmployee(type);
     }
 
-    public void printHelp() {
+    private void printHelp() {
         printHelpCommandsList();
         printHelpDepartment();
         printHelpEmployee();

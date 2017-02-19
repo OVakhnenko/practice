@@ -1,7 +1,7 @@
 package com.vakhnenko.departments.daojdbc;
 
 import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.daofile.EmployeeFileDAO;
+import com.vakhnenko.departments.daofile.*;
 import com.vakhnenko.departments.employee.*;
 import com.vakhnenko.departments.entity.*;
 
@@ -25,8 +25,7 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
     }
 
     @Override
-    public void add(Employee item) {
-        Employee employee = item;
+    public void add(Employee employee) {
         String type = employee.getType();
 
         if (type.equals(EMPLOYEE_MANAGER_TYPE)) {

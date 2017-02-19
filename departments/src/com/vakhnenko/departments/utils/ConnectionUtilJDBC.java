@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static com.vakhnenko.departments.constants.Constants.*;
-import static com.vakhnenko.departments.constants.Constants.DB_CREATE_ERROR_EXIT_CODE;
 
 public abstract class ConnectionUtilJDBC {
 
