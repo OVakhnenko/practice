@@ -1,12 +1,11 @@
-package com.vakhnenko.departments.daofile;
+package com.vakhnenko.departments.dao.file;
 
 import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.employee.*;
-import com.vakhnenko.departments.entity.*;
+import com.vakhnenko.departments.entity.employee.*;
 
 import java.io.*;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 
 /**
  * Created for practice on 10.02.2017 9:36

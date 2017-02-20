@@ -1,10 +1,7 @@
-package com.vakhnenko.departments.main;
+package com.vakhnenko.departments;
 
 import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.daofile.*;
-import com.vakhnenko.departments.daojdbc.*;
-import com.vakhnenko.departments.logic.*;
-import com.vakhnenko.departments.utils.*;
+import com.vakhnenko.departments.dao.jdbc.*;
 
 public class Application {
     public static void main(String[] args) throws Exception {

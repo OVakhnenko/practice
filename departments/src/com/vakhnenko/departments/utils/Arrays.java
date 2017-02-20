@@ -1,6 +1,6 @@
 package com.vakhnenko.departments.utils;
 
-public class Arrays {
+public abstract class Arrays {
     public static int searchKeyInArray(String[] commands, String key) {
         int result = -1;
 

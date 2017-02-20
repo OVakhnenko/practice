@@ -3,7 +3,7 @@ package com.vakhnenko.departments.utils;
 import java.io.*;
 import java.nio.charset.*;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 
 /**
  * Created for practice on 10.02.2017 9:07

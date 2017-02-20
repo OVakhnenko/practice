@@ -1,6 +1,6 @@
-package com.vakhnenko.departments.constants;
+package com.vakhnenko.departments.utils;
 
-public class Constants {
+public abstract class Constants {
     public static final String EXIT_COMMAND = "EXIT";
     public static final String HELP_COMMAND = "HELP";
     public static final String CREATE_COMMAND = "CREATE";
@@ -105,7 +105,4 @@ public class Constants {
             + "department_name = ";
     public static final String TYPE_IS_EQUAL = " "
             + "type = ";
-
-    private Constants() {
-    }
 }

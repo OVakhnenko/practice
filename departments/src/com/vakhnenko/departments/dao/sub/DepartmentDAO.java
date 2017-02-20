@@ -1,6 +1,6 @@
 package com.vakhnenko.departments.dao.sub;
 
-import com.vakhnenko.departments.department.Department;
+import com.vakhnenko.departments.entity.department.Department;
 
 import java.util.List;
 

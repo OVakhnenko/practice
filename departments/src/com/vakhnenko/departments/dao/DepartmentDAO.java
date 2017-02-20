@@ -1,6 +1,6 @@
 package com.vakhnenko.departments.dao;
 
-import com.vakhnenko.departments.department.*;
+import com.vakhnenko.departments.entity.department.Department;
 
 public class DepartmentDAO extends EntityDAO<Department> {
 

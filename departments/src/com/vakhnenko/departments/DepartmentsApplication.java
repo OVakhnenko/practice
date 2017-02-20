@@ -1,9 +1,9 @@
-package com.vakhnenko.departments.logic;
+package com.vakhnenko.departments;
 
 import java.io.*;
 import java.util.List;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 import static com.vakhnenko.departments.utils.PrintHelper.*;
 import static com.vakhnenko.departments.utils.Strings.*;
 import static com.vakhnenko.departments.utils.Arrays.*;

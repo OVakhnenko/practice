@@ -1,7 +1,7 @@
 package com.vakhnenko.departments.dao.sub;
 
 
-import com.vakhnenko.departments.employee.Employee;
+import com.vakhnenko.departments.entity.employee.Employee;
 
 import java.util.List;
 

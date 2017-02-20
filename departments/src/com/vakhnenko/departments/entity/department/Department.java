@@ -1,11 +1,6 @@
-package com.vakhnenko.departments.department;
+package com.vakhnenko.departments.entity.department;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
-import static com.vakhnenko.departments.constants.Constants.*;
-
-import com.vakhnenko.departments.entity.*;
+import com.vakhnenko.departments.entity.Entity;
 
 public class Department extends Entity {
     private static int departmentID;

@@ -1,15 +1,15 @@
-package com.vakhnenko.departments.daofile;
+package com.vakhnenko.departments.dao.file;
 
 import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.department.*;
-import com.vakhnenko.departments.employee.*;
+import com.vakhnenko.departments.entity.department.Department;
+import com.vakhnenko.departments.entity.employee.*;
 import com.vakhnenko.departments.entity.*;
 import com.vakhnenko.departments.utils.*;
 
 import java.io.*;
 import java.util.*;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 
 /**
  * Created for practice on 09.02.2017 21:07
@@ -92,10 +92,10 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
             System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
             System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
 
-            if (entity.getClass().getName().equals("com.vakhnenko.departments.employee.Manager")) {
+            if (entity.getClass().getName().equals("com.vakhnenko.departments.entity.employee.Manager")) {
                 System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
                 System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
-            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.employee.Developer")) {
+            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.entity.employee.Developer")) {
                 System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
                 System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
             }

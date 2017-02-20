@@ -1,11 +1,11 @@
 package com.vakhnenko.departments.dao;
 
-import com.vakhnenko.departments.employee.*;
+import com.vakhnenko.departments.entity.employee.*;
 
 import java.io.IOException;
 import java.util.List;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 
 /**
  * Created for practice on 09.02.2017 21:04

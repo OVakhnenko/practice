@@ -1,15 +1,13 @@
-package com.vakhnenko.departments.daojdbc;
+package com.vakhnenko.departments.dao.jdbc;
 
-import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.daofile.*;
-import com.vakhnenko.departments.employee.*;
-import com.vakhnenko.departments.entity.*;
+import com.vakhnenko.departments.dao.file.*;
+import com.vakhnenko.departments.entity.employee.*;
 
 import java.sql.*;
 import java.util.*;
 
 import static com.vakhnenko.departments.utils.ConnectionUtilJDBC.*;
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 import static com.vakhnenko.departments.utils.Strings.*;
 
 /**
