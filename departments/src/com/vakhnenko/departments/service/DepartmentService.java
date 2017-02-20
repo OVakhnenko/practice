@@ -30,6 +30,7 @@ public class DepartmentService {
 
     public void printAllEmployee(String departmentName) {
         if (departmentDAO.exists(departmentName)) {
+            //todo: perform print here but not in DAO
             employeeDAO.printAll(departmentName);
         } else {
             System.out.println("The department \"" + departmentName + "\" not found");
@@ -41,7 +42,7 @@ public class DepartmentService {
     }
 
     public void printSearchedEmployeeAge(String departmentName, int age) {
-        if (departmentExists(departmentName)) {
+        if (departmentDAO.exists(departmentName)) {
             employeeDAO.printAll(departmentName, age);
         } else {
             System.out.println("The department \"" + departmentName + "\" not found");
@@ -49,7 +50,7 @@ public class DepartmentService {
     }
 
     public void printEmployee(String employeeName, boolean use_br) {
-        if (employeeExists(employeeName)) {
+        if (employeeDAO.exists(employeeName)) {
             employeeDAO.print(employeeName, use_br);
         } else {
             System.out.println("The employee \"" + employeeName + "\" not found");
