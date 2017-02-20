@@ -4,27 +4,33 @@ import com.vakhnenko.departments.dao.*;
 import com.vakhnenko.departments.entity.employee.*;
 
 import java.io.*;
+import java.util.List;
 
 import static com.vakhnenko.departments.utils.Constants.*;
 
 /**
  * Created for practice on 10.02.2017 9:36
  */
-public class EmployeeFileDAO<T extends Employee> extends EmployeeDAO<T> {
-    public void update(String employeeName, int age, String departmentName, String methodology, String language) {
-        Employee employee = search(employeeName);
+public class EmployeeFileDAO implements EmployeeDAO {
+    private FileWriter writer;
 
-        if (employee != null) {
-            if (age > 0) employee.setAge(age);
-            if (!departmentName.equals("")) employee.setDepartment(departmentName);
-            if (!methodology.equals("")) ((Manager) employee).setMethodology(methodology);
-            if (!language.equals("")) ((Developer) employee).setLanguage(language);
-        } else {
-            System.out.println("Error! Employee " + employeeName + " not founf!");
-        }
+    public EmployeeFileDAO(FileWriter writer) {
+        this.writer = writer;
     }
 
-    public boolean save(Employee employee, FileWriter writer) throws IOException {
+    @Override
+    public Employee getById(int id) {
+        return null;
+    }
+
+    @Override
+    public void remove(int id) {
+        //todo:remove
+    }
+
+    @Override
+    public void save(Employee employee) {
+//        writer.write();  todo: write it
         String type;
 
         try {
@@ -39,18 +45,23 @@ public class EmployeeFileDAO<T extends Employee> extends EmployeeDAO<T> {
                 writer.write(LANGUAGE_EMPLOYEE_KEY + " " + ((Developer) employee).getLanguage() + " ");
             }
             writer.flush();
-            return true;
         } catch (IOException e) {
             System.out.println("Write error!");
-            return false;
         }
     }
 
-    public void writeln(FileWriter writer) throws IOException {
-        try {
-            writer.write("\n");
-        } catch (IOException e) {
-            System.out.println("WriteLn error!");
-        }
+    @Override
+    public List<Employee> getAll() {
+        return null;
+    }
+
+    @Override
+    public boolean exists(String name) {
+        return false;
+    }
+
+    @Override
+    public List<Employee> find(String departmentName, int age) {
+        return null;
     }
 }

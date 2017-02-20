@@ -36,8 +36,8 @@ public abstract class Constants {
 
     public static final String FILE_DAO_FILE_NAME = "\\departments.txt";
 
-    public static final String DB_DRIVER = "com.mysql.jdbc.Driver"; //"oracle.jdbc.driver.OracleDriver";
-    public static final String DB_CONNECTION = "jdbc:mysql://localhost:3306/departments";
+    public static final String DB_DRIVER = "com.mysql.db.Driver"; //"oracle.db.driver.OracleDriver";
+    public static final String DB_CONNECTION = "db:mysql://localhost:3306/departments";
     public static final String DB_USER = "root";
     public static final String DB_PASSWORD = "oJ0K58fE29kZhgXcQQV7";
 

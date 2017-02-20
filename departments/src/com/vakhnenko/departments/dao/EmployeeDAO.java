@@ -1,32 +1,10 @@
 package com.vakhnenko.departments.dao;
 
-import com.vakhnenko.departments.entity.*;
 
-public class EmployeeDAO<T extends Entity> extends EntityDAO<T> {
+import com.vakhnenko.departments.entity.employee.Employee;
 
-    public EmployeeDAO() {
-        setEntityStatus("Employee");
-    }
+import java.util.List;
 
-    public void update(String employeeName, int age, String departmentName, String methodology, String language) {
-    }
-
-    public String getType(String employeeName) {
-        return "";
-    }
-
-    public void print(String employeeName, boolean use_br) {
-    }
-
-    public void printAll(String departmentName) {
-    }
-
-    public void printAll(String departmentName, int age) {
-    }
-
-    public void printTop(String type) {
-    }
-
-    public void done() {
-    }
+public interface EmployeeDAO extends DAO<Employee> {
+    List<Employee> find(String departmentName, int age);
 }

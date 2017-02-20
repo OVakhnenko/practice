@@ -2,16 +2,16 @@ package com.vakhnenko.departments.dao;
 
 import com.vakhnenko.departments.entity.Entity;
 
-import java.util.*;
+import java.util.List;
 
-abstract class DAO<T extends Entity> {
-    abstract public void add(T item);
+interface DAO<T extends Entity> {
+    T getById(int id);
 
-    abstract public void delete(String name);
+    void remove(int id);
 
-    abstract public T search(String name);
+    void save(T entity);
 
-    abstract public int getSize();
+    List<T> getAll();
 
-    abstract public List<T> getAll();
+    boolean exists(String name);
 }

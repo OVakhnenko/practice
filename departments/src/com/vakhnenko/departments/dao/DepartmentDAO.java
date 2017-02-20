@@ -2,20 +2,8 @@ package com.vakhnenko.departments.dao;
 
 import com.vakhnenko.departments.entity.department.Department;
 
-public class DepartmentDAO extends EntityDAO<Department> {
+import java.util.List;
 
-    public DepartmentDAO() {
-        setEntityStatus("Department");
-    }
-
-    public void create(String name) {
-        if (search(name) != null) {
-            System.out.println("Department  \"" + name + "\" already exists");
-        } else {
-            add(new Department(name));
-        }
-    }
-
-    public void done() {
-    }
+public interface DepartmentDAO extends DAO<Department> {
+    List<Department> findTop(String employeeType);
 }

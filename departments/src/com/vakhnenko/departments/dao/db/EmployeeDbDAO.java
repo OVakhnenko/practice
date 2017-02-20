@@ -1,28 +1,38 @@
-package com.vakhnenko.departments.dao.jdbc;
+package com.vakhnenko.departments.dao.db;
 
-import com.vakhnenko.departments.dao.file.*;
-import com.vakhnenko.departments.entity.employee.*;
+import com.vakhnenko.departments.dao.EmployeeDAO;
+import com.vakhnenko.departments.entity.employee.Developer;
+import com.vakhnenko.departments.entity.employee.Employee;
+import com.vakhnenko.departments.entity.employee.Manager;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.vakhnenko.departments.utils.ConnectionUtilJDBC.*;
+import static com.vakhnenko.departments.utils.ConnectionUtilJDBC.insertIntoDB;
 import static com.vakhnenko.departments.utils.Constants.*;
-import static com.vakhnenko.departments.utils.Strings.*;
+import static com.vakhnenko.departments.utils.Strings.printStringSetLength;
+import static com.vakhnenko.departments.utils.Strings.swq;
 
 /**
  * Created for practice on 10.02.2017 10:21
  */
-public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
+public class EmployeeDbDAO implements EmployeeDAO {
     private Connection dbConnection;
     private Statement statement;
 
-    public EmployeeDbDAO(Connection dbConnection) throws SQLException {
+    public EmployeeDbDAO(Connection dbConnection){
         this.dbConnection = dbConnection;
-        this.statement = dbConnection.createStatement();
+        try {
+            this.statement = dbConnection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
     public void add(Employee employee) {
         String type = employee.getType();
 
@@ -69,7 +79,6 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
         }
     }
 
-    @Override
     public void delete(String name) {
         String query = DELETE_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(name);
 
@@ -80,7 +89,6 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
         }
     }
 
-    @Override
     public String getType(String employeeName) {
         String query = SELECT_TYPE_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(employeeName);
         String result = "";
@@ -100,7 +108,6 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
         return result;
     }
 
-    @Override
     public boolean exists(String name) {
         String query = SELECT_NAME_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(name);
         boolean result = false;
@@ -115,7 +122,6 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
         return result;
     }
 
-    @Override
     public void done() {
         if (statement != null) {
             try {
@@ -271,5 +277,30 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
         } catch (SQLException e) {
             System.out.println("MySQL query error! " + query);
         }
+    }
+
+    @Override
+    public Employee getById(int id) {
+        return null;
+    }
+
+    @Override
+    public void remove(int id) {
+
+    }
+
+    @Override
+    public void save(Employee entity) {
+
+    }
+
+    @Override
+    public List<Employee> getAll() {
+        return null;
+    }
+
+    @Override
+    public List<Employee> find(String departmentName, int age) {
+        return null;
     }
 }
