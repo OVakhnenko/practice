@@ -1,6 +1,5 @@
 package com.vakhnenko.departments.utils;
 
-import static com.vakhnenko.departments.constants.Constants.*;
 import static com.vakhnenko.departments.utils.Arrays.*;
 
 public class PrintHelper {

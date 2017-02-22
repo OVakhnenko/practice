@@ -1,9 +1,4 @@
-package com.vakhnenko.departments.employee;
-
-import java.io.FileWriter;
-import java.io.IOException;
-
-import static com.vakhnenko.departments.constants.Constants.*;
+package com.vakhnenko.departments.entity.employee;
 
 public class Manager extends Employee {
     private String methodology;

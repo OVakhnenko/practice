@@ -14,4 +14,12 @@ abstract class DAO<T extends Entity> {
     abstract public int getSize();
 
     abstract public List<T> getAll();
+
+    public boolean save() {
+        return false;
+    }
+
+    public List<String> read() {
+        return null;
+    }
 }

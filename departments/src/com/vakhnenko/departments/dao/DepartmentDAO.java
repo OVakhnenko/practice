@@ -1,6 +1,7 @@
 package com.vakhnenko.departments.dao;
 
-import com.vakhnenko.departments.department.*;
+import com.vakhnenko.departments.entity.*;
+import com.vakhnenko.departments.entity.department.*;
 
 public class DepartmentDAO extends EntityDAO<Department> {
 
@@ -17,5 +18,9 @@ public class DepartmentDAO extends EntityDAO<Department> {
     }
 
     public void done() {
+    }
+
+    public boolean save() {
+        return false;
     }
 }

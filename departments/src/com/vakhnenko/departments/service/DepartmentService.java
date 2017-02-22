@@ -1,79 +1,37 @@
-package com.vakhnenko.departments.daofile;
+package com.vakhnenko.departments.service;
 
 import com.vakhnenko.departments.dao.*;
-import com.vakhnenko.departments.department.*;
-import com.vakhnenko.departments.employee.*;
+import com.vakhnenko.departments.dao.file.*;
+import com.vakhnenko.departments.dao.db.*;
+import com.vakhnenko.departments.entity.department.*;
+import com.vakhnenko.departments.entity.employee.*;
 import com.vakhnenko.departments.entity.*;
 import com.vakhnenko.departments.utils.*;
 
 import java.io.*;
 import java.util.*;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 
 /**
  * Created for practice on 09.02.2017 21:07
  */
-public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO> {
-    private DepartmentFileDAO departmentDAO;
-    private EmployeeFileDAO<Employee> employeeDAO;
+public class DepartmentService {
+    private DepartmentDAO departmentDAO = new DepartmentFileDAO(ConnectionUtilFile.getFileConnectionWriter()); //DepartmentDbDAO(ConnectionUtilJDBC.getDBConnection());
+    private EmployeeDAO<Employee> employeeDAO = new EmployeeFileDAO(ConnectionUtilFile.getFileConnectionWriter()); //EmployeeDbDAO(ConnectionUtilJDBC.getDBConnection());
 
-    public OfficeFileDAO() {
-        setDepartmentDAO(departmentDAO = new DepartmentFileDAO());
-        setEmployeeDAO(employeeDAO = new EmployeeFileDAO<>());
-    }
-
-    @Override
-    public boolean saveToFile() throws IOException {
-        FileWriter writer = ConnectionUtilFile.getFileConnectionWriter();
-        boolean saved = false;
-
-        if (departmentDAO.getSize() == 0) {
-            System.out.println("Error! No departments");
-        } else {
-            for (Entity department : departmentDAO.getAll()) {
-                saved = departmentDAO.save((Department) department, writer);
-                if (!saved)
-                    return false;
-            }
-            for (Employee employee : employeeDAO.getAll()) {
-                saved = employeeDAO.save(employee, writer);
-                employeeDAO.writeln(writer);
-                if (!saved) return false;
-            }
-            writer.close();
-            if (saved) {
+    public void saveToFile() {
+        if (departmentDAO.save()) {
+            if (employeeDAO.save()) {
                 System.out.println("All data saved successfully");
             }
         }
-        return true;
     }
 
-    @Override
     public List<String> readFromFile() throws IOException {
-        BufferedReader reader = ConnectionUtilFile.getFileConnectionReader();
-        List<String> lines = new ArrayList<>();
-        String line;
-
-        if (departmentDAO.getSize() != 0) {
-            System.out.println("Error! Departments are exists");
-        } else {
-            {
-                while ((line = reader.readLine()) != null) {
-                    lines.add(line);
-                }
-            }
-        }
-        return lines;
+        return departmentDAO.read();
     }
 
-    @Override
-    public String getTypeEmployee(String employeeName) {
-        Employee employee = employeeDAO.search(employeeName);
-        return (employee != null) ? employee.getType() : "";
-    }
-
-    @Override
     public void printAllEmployee(String department) {
         for (Entity employee : employeeDAO.getAll()) {
             if (((Employee) employee).getDepartment().equals(department))
@@ -92,10 +50,10 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
             System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
             System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
 
-            if (entity.getClass().getName().equals("com.vakhnenko.departments.employee.Manager")) {
+            if (entity.getClass().getName().equals("com.vakhnenko.departments.entity.employee.Manager")) {
                 System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
                 System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
-            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.employee.Developer")) {
+            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.entity.employee.Developer")) {
                 System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
                 System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
             }
@@ -120,8 +78,9 @@ public class OfficeFileDAO extends OfficeDAO<DepartmentFileDAO, EmployeeFileDAO>
         System.out.println("Error! Unknown command - type \"help\" for commands list");
     }
 
-    @Override
     public void done() {
+        departmentDAO.done();
+        employeeDAO.done();
         System.out.println("Bye!");
     }
 }

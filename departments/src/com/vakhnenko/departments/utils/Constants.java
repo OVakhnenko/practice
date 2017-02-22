@@ -1,4 +1,4 @@
-package com.vakhnenko.departments.constants;
+package com.vakhnenko.departments.utils;
 
 public class Constants {
     public static final String EXIT_COMMAND = "EXIT";

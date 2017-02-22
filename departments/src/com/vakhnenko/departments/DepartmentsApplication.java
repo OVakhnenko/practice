@@ -1,24 +1,24 @@
-package com.vakhnenko.departments.logic;
+package com.vakhnenko.departments;
+
+import com.vakhnenko.departments.service.*;
 
 import java.io.*;
 import java.util.List;
 
-import static com.vakhnenko.departments.constants.Constants.*;
+import static com.vakhnenko.departments.utils.Constants.*;
 import static com.vakhnenko.departments.utils.PrintHelper.*;
 import static com.vakhnenko.departments.utils.Strings.*;
 import static com.vakhnenko.departments.utils.Arrays.*;
 
-import com.vakhnenko.departments.dao.*;
+public class DepartmentsApplication {
+    private DepartmentService departmentService = new DepartmentService();
 
-public class DepartmentsApplication<T extends OfficeDAO> {
-    private T office;
-
-    public DepartmentsApplication(T office) {
-        this.office = office;
+    public DepartmentsApplication() {
     }
 
     public void run() throws IOException {
         String command;
+
         boolean noExit = true;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
@@ -56,15 +56,15 @@ public class DepartmentsApplication<T extends OfficeDAO> {
     }
 
     public void done() {
-        office.done();
+        departmentService.done();
     }
 
-    private boolean saveToFile() throws IOException {
-        return office.saveToFile();
+    private void saveToFile() throws IOException {
+        departmentService.saveToFile();
     }
 
     private void readFromFile() throws IOException {
-        List<String> lines = office.readFromFile();
+        List<String> lines = departmentService.readFromFile();
 
         if (lines != null) {
             for (String line : lines) {
