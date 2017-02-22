@@ -1,8 +1,10 @@
 package com.vakhnenko.departments;
 
 import com.vakhnenko.departments.service.*;
+import com.vakhnenko.departments.utils.PrintHelper;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.vakhnenko.departments.utils.Constants.*;
@@ -13,7 +15,7 @@ import static com.vakhnenko.departments.utils.Arrays.*;
 public class DepartmentsApplication {
     private DepartmentService departmentService = new DepartmentService();
 
-    public DepartmentsApplication() {
+    public DepartmentsApplication() throws SQLException {
     }
 
     public void run() throws IOException {
@@ -23,11 +25,11 @@ public class DepartmentsApplication {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        while (noExit) {
+        /*while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }
-        /*readCommand("create -d 111 1111 11111");
+        }*/
+        readCommand("create -d 111 1111 11111");
         readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
@@ -52,7 +54,7 @@ public class DepartmentsApplication {
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
         readCommand("top -d -t m");
-        readCommand("save");*/
+        readCommand("save");
     }
 
     public void done() {
@@ -96,10 +98,10 @@ public class DepartmentsApplication {
                 remove(commands);
                 break;
             case PRINT_ALL_DEPARTMENTS_COMMAND:
-                office.printAllDepartments();
+                departmentService.printAllDepartments();
                 break;
             case ALL_COMMAND:
-                office.printAll();
+                departmentService.printAll();
                 break;
             case SEARCH_COMMAND:
                 printSearchedEmployee(commands);
@@ -136,8 +138,8 @@ public class DepartmentsApplication {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
 
         if (!name.equals("")) {
-            office.createDepartment(name);
-            office.printAllDepartments();
+            departmentService.createDepartment(name);
+            departmentService.printAllDepartments();
         } else {
             System.out.println("Error! Name is empty");
         }
@@ -156,14 +158,14 @@ public class DepartmentsApplication {
         }
 
         if (update) {
-            if (!office.employeeExists(employeeName)) {
+            if (!departmentService.employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" not found");
                 return;
             } else {
-                type = office.getTypeEmployee(employeeName);
+                type = departmentService.getTypeEmployee(employeeName);
             }
         } else {
-            if (office.employeeExists(employeeName)) {
+            if (departmentService.employeeExists(employeeName)) {
                 System.out.println("The employee \"" + employeeName + "\" already exists");
                 return;
             }
@@ -178,9 +180,9 @@ public class DepartmentsApplication {
                 System.out.println("Error! Department is empty");
                 return;
             }
-            if (!office.departmentExists(departmentName)) {
+            if (!departmentService.departmentExists(departmentName)) {
                 System.out.println("Error! Department not exists!");
-                office.printAllDepartments();
+                departmentService.printAllDepartments();
                 return;
             }
         }
@@ -223,23 +225,23 @@ public class DepartmentsApplication {
     }
 
     private void createManagerAndPrint(String employeeName, String type, int age, String departmentName, String methodology) {
-        office.createManager(employeeName, type, age, departmentName, methodology);
-        office.printEmployee(employeeName, NOT_USE_BR);
+        departmentService.createManager(employeeName, type, age, departmentName, methodology);
+        departmentService.printEmployee(employeeName, NOT_USE_BR);
     }
 
     private void createDeveloperAndPrint(String employeeName, String type, int age, String departmentName, String language) {
-        office.createDeveloper(employeeName, type, age, departmentName, language);
-        office.printEmployee(employeeName, NOT_USE_BR);
+        departmentService.createDeveloper(employeeName, type, age, departmentName, language);
+        departmentService.printEmployee(employeeName, NOT_USE_BR);
     }
 
     private void updateManagerAndPrint(String employeeName, int age, String departmentName, String methodology) {
-        office.updateManager(employeeName, age, departmentName, methodology);
-        office.printEmployee(employeeName, NOT_USE_BR);
+        departmentService.updateManager(employeeName, age, departmentName, methodology);
+        departmentService.printEmployee(employeeName, NOT_USE_BR);
     }
 
     private void updateDeveloperAndPrint(String employeeName, int age, String departmentName, String language) {
-        office.updateDeveloper(employeeName, age, departmentName, language);
-        office.printEmployee(employeeName, NOT_USE_BR);
+        departmentService.updateDeveloper(employeeName, age, departmentName, language);
+        departmentService.printEmployee(employeeName, NOT_USE_BR);
     }
 
     private void remove(String[] commands) {
@@ -257,13 +259,13 @@ public class DepartmentsApplication {
 
     private void removeDepartment(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        office.removeDepartment(name);
-        office.printAllDepartments();
+        departmentService.removeDepartment(name);
+        departmentService.printAllDepartments();
     }
 
     private void removeEmployee(String[] commands) {
         String name = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        office.removeEmployee(name);
+        departmentService.removeEmployee(name);
     }
 
     private void open(String[] commands) {
@@ -283,7 +285,7 @@ public class DepartmentsApplication {
         String departmentName = getStringFromManyWords(commands, FIRST_KEY_POSITION);
 
         if (!departmentName.equals("")) {
-            office.printAllEmployee(departmentName);
+            departmentService.printAllEmployee(departmentName);
         } else {
             System.out.println("Error! Name is empty");
         }
@@ -291,7 +293,7 @@ public class DepartmentsApplication {
 
     private void openEmployee(String[] commands) {
         String employeeName = getStringFromManyWords(commands, FIRST_KEY_POSITION);
-        office.openEntityWithName(employeeName);
+        departmentService.openEntityWithName(employeeName);
     }
 
     private void update(String[] commands) {
@@ -316,7 +318,7 @@ public class DepartmentsApplication {
             } catch (NumberFormatException e) {
                 age = 0;
             }
-            office.printSearchedEmployeeAge(departmentName, age);
+            departmentService.printSearchedEmployeeAge(departmentName, age);
         } else {
             System.out.println("Error! Unknown command - \" type \"help\" for commands list");
         }
@@ -324,14 +326,15 @@ public class DepartmentsApplication {
 
     private void printTopEmployee(String[] commands) {
         String type = getKeyFromArray(commands, TYPE_EMPLOYEE_KEY);
-        office.printTopEmployee(type);
+        departmentService.printTopEmployee(type);
     }
 
     private void printHelp() {
-        printHelpCommandsList();
-        printHelpDepartment();
-        printHelpEmployee();
-        printHelpReadSave();
-        printHelpExit();
+        PrintHelper.printHelpCommandsList();
+        PrintHelper.printHelpDepartment();
+        PrintHelper.printHelpEmployee();
+        PrintHelper.printHelpReadSave();
+        PrintHelper.printHelpSomething();
+        PrintHelper.printHelpExit();
     }
 }

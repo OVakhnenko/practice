@@ -1,23 +1,39 @@
 package com.vakhnenko.departments.dao.db;
 
+import com.vakhnenko.departments.dao.DepartmentDAO;
 import com.vakhnenko.departments.dao.file.DepartmentFileDAO;
+import com.vakhnenko.departments.entity.department.Department;
+import com.vakhnenko.departments.entity.employee.Employee;
 
 import static com.vakhnenko.departments.utils.ConnectionUtilJDBC.*;
 import static com.vakhnenko.departments.utils.Constants.*;
 import static com.vakhnenko.departments.utils.Strings.*;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created for practice on 10.02.2017 10:20
  */
-public class DepartmentDbDAO extends DepartmentFileDAO {
+public class DepartmentDbDAO extends DepartmentDAO {
     private Connection dbConnection;
     private Statement statement;
 
     public DepartmentDbDAO(Connection dbConnection) throws SQLException {
         this.dbConnection = dbConnection;
         this.statement = dbConnection.createStatement();
+    }
+
+    @Override
+    public boolean save() {
+        return false;
+    }
+
+    @Override
+    public List<String> read() {
+        return null;
     }
 
     @Override
@@ -56,16 +72,20 @@ public class DepartmentDbDAO extends DepartmentFileDAO {
     }
 
     @Override
-    public void printAll() {
+    public List<Department> getAll() {
+        List<Department> result = new ArrayList<>();
+
         try {
             ResultSet rs = statement.executeQuery(SELECT_NAME_FROM_DB_DEPARTMENT);
             while (rs.next()) {
                 String name = rs.getString("name");
+                result.add(new Department(name));
                 System.out.println("name: " + name);
             }
         } catch (SQLException e) {
             System.out.println("MySQL query error! " + SELECT_NAME_FROM_DB_DEPARTMENT);
         }
+        return result;
     }
 
     @Override

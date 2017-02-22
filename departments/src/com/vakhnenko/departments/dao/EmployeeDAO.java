@@ -1,6 +1,9 @@
 package com.vakhnenko.departments.dao;
 
 import com.vakhnenko.departments.entity.*;
+import com.vakhnenko.departments.entity.employee.Employee;
+
+import java.util.*;
 
 public class EmployeeDAO<T extends Entity> extends EntityDAO<T> {
 
@@ -8,25 +11,26 @@ public class EmployeeDAO<T extends Entity> extends EntityDAO<T> {
         setEntityStatus("Employee");
     }
 
-    public void update(String employeeName, int age, String departmentName, String methodology, String language) {
-    }
+    public void update(String employeeName, int age, String departmentName, String methodology, String language) {}
 
     public String getType(String employeeName) {
-        return "";
+        return ((Employee) search(employeeName)).getType();
     }
 
-    public void print(String employeeName, boolean use_br) {
+    public T getByName(String name) {
+        return search(name);
     }
 
-    public void printAll(String departmentName) {
+    public List<T> getAll(String departmentName) {
+        List<T> result = new ArrayList<>();
+
+        for (T list : getAll()) {
+            if (((Employee) list).getDepartment().equals(departmentName)) {
+                result.add(list);
+            }
+        }
+        return result;
     }
 
-    public void printAll(String departmentName, int age) {
-    }
-
-    public void printTop(String type) {
-    }
-
-    public void done() {
-    }
+    public void done() {}
 }

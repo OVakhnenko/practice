@@ -17,6 +17,10 @@ public class DepartmentDAO extends EntityDAO<Department> {
         }
     }
 
+    public Department getByName(String name) {
+        return search(name);
+    }
+
     public void done() {
     }
 

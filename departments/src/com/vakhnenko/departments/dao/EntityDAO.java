@@ -59,20 +59,5 @@ public abstract class EntityDAO<T extends Entity> extends DAO<T> {
         this.entityStatus = entityStatus;
     }
 
-    public void printAll() {
-        if (list.size() > 0) {
-            for (T item : list) {
-                print(item);
-            }
-        } else {
-            System.out.println("Erroe! Employees not found!" +
-                    ". Type \"create\" for create first employee");
-        }
-    }
-
-    private void print(T employee) {
-        System.out.println(getEntityStatus() + " name \"" + employee.getName() + "\"");
-    }
-
     abstract void done();
 }

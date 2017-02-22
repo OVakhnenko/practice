@@ -1,5 +1,6 @@
 package com.vakhnenko.departments.dao.db;
 
+import com.vakhnenko.departments.dao.EmployeeDAO;
 import com.vakhnenko.departments.dao.file.EmployeeFileDAO;
 import com.vakhnenko.departments.entity.employee.*;
 
@@ -13,13 +14,23 @@ import static com.vakhnenko.departments.utils.Strings.*;
 /**
  * Created for practice on 10.02.2017 10:21
  */
-public class EmployeeDbDAO<T extends Employee> extends EmployeeFileDAO<T> {
+public class EmployeeDbDAO<T extends Employee> extends EmployeeDAO<T> {
     private Connection dbConnection;
     private Statement statement;
 
     public EmployeeDbDAO(Connection dbConnection) throws SQLException {
         this.dbConnection = dbConnection;
         this.statement = dbConnection.createStatement();
+    }
+
+    @Override
+    public boolean save() {
+        return false;
+    }
+
+    @Override
+    public List<String> read() {
+        return null;
     }
 
     @Override

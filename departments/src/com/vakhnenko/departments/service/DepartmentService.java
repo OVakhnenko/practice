@@ -9,6 +9,7 @@ import com.vakhnenko.departments.entity.*;
 import com.vakhnenko.departments.utils.*;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 
 import static com.vakhnenko.departments.utils.Constants.*;
@@ -17,8 +18,89 @@ import static com.vakhnenko.departments.utils.Constants.*;
  * Created for practice on 09.02.2017 21:07
  */
 public class DepartmentService {
-    private DepartmentDAO departmentDAO = new DepartmentFileDAO(ConnectionUtilFile.getFileConnectionWriter()); //DepartmentDbDAO(ConnectionUtilJDBC.getDBConnection());
-    private EmployeeDAO<Employee> employeeDAO = new EmployeeFileDAO(ConnectionUtilFile.getFileConnectionWriter()); //EmployeeDbDAO(ConnectionUtilJDBC.getDBConnection());
+    //private DepartmentDAO departmentDAO = new DepartmentFileDAO(ConnectionUtilFile.getFileConnectionWriter());
+    //private EmployeeDAO<Employee> employeeDAO = new EmployeeFileDAO(ConnectionUtilFile.getFileConnectionWriter());
+    private DepartmentDAO departmentDAO = new DepartmentDbDAO(ConnectionUtilJDBC.getDBConnection());
+    private EmployeeDAO<Employee> employeeDAO = new EmployeeDbDAO(ConnectionUtilJDBC.getDBConnection());
+
+    public DepartmentService() throws SQLException {
+    }
+
+    public void createDepartment(String name) {
+        if (departmentDAO.exists(name)) {
+            System.out.println("Error! Department " + name + " already exists!");
+        } else {
+            departmentDAO.create(name);
+        }
+    }
+
+    public void createManager(String employeeName, String type, int age, String departmentName, String methodology) {
+        if (employeeExists(employeeName)) {
+            System.out.println("Error! Manager " + employeeName + " already exists!");
+        } else {
+            employeeDAO.add(new Manager(employeeName, type, age, departmentName, methodology));
+        }
+    }
+
+    public void createDeveloper(String employeeName, String type, int age, String departmentName, String language) {
+        if (employeeExists(employeeName)) {
+            System.out.println("Error! Developer " + employeeName + " already exists!");
+        } else {
+            employeeDAO.add(new Developer(employeeName, type, age, departmentName, language));
+        }
+    }
+
+    public void updateManager(String employeeName, int age, String departmentName, String methodology) {
+        if (employeeExists(employeeName)) {
+            employeeDAO.update(employeeName, age, departmentName, methodology, "");
+        } else {
+            System.out.println("Error! Employee " + employeeName + " not found!");
+        }
+    }
+
+    public void updateDeveloper(String employeeName, int age, String departmentName, String language) {
+        if (employeeExists(employeeName)) {
+            employeeDAO.update(employeeName, age, departmentName, "", language);
+        } else {
+            System.out.println("Error! Employee " + employeeName + " not found!");
+        }
+    }
+
+    public void removeDepartment(String name) {
+        if (departmentExists(name)) {
+            departmentDAO.delete(name);
+        } else {
+            System.out.println("Error! Department " + name + " not found!");
+        }
+    }
+
+    public void removeEmployee(String name) {
+        if (employeeExists(name)) {
+            employeeDAO.delete(name);
+        } else {
+            System.out.println("Error! Employee " + name + " not found!");
+        }
+    }
+
+    public boolean departmentExists(String departmentName) {
+        return departmentDAO.exists(departmentName);
+    }
+
+    public boolean employeeExists(String employeeName) {
+        return employeeDAO.exists(employeeName);
+    }
+
+    public String getTypeEmployee(String employeeName) {
+        String result;
+
+        if (employeeExists(employeeName)) {
+            result = employeeDAO.getType(employeeName);
+        } else {
+            result = "";
+        }
+
+        return result;
+    }
 
     public void saveToFile() {
         if (departmentDAO.save()) {
@@ -32,48 +114,36 @@ public class DepartmentService {
         return departmentDAO.read();
     }
 
-    public void printAllEmployee(String department) {
-        for (Entity employee : employeeDAO.getAll()) {
-            if (((Employee) employee).getDepartment().equals(department))
-                printEmployee(employee.getName(), NOT_USE_BR);
-        }
-    }
-
-    @Override
-    public void printEmployee(String employeeName, boolean use_br) {
-        Entity entity = employeeDAO.search(employeeName);
-
-        if (entity != null) {
-            System.out.print("Name " + entity.getName() + " " + ((use_br) ? "\n" : ""));
-            System.out.print("ID " + entity.getID() + " " + ((use_br) ? "\n" : ""));
-
-            System.out.print("Age " + ((Employee) entity).getAge() + " " + ((use_br) ? "\n" : ""));
-            System.out.print("Dep " + ((Employee) entity).getDepartment() + " " + ((use_br) ? "\n" : ""));
-
-            if (entity.getClass().getName().equals("com.vakhnenko.departments.entity.employee.Manager")) {
-                System.out.print("Type (" + ((Employee) entity).getType() + ") - MANAGER " + ((use_br) ? "\n" : ""));
-                System.out.print("Meth " + ((Manager) entity).getMethodology() + " " + ((use_br) ? "\n" : ""));
-            } else if (entity.getClass().getName().equals("com.vakhnenko.departments.entity.employee.Developer")) {
-                System.out.print("Type (" + ((Employee) entity).getType() + ") - DEVELOPER " + ((use_br) ? "\n" : ""));
-                System.out.print("Lang " + ((Developer) entity).getLanguage() + " " + ((use_br) ? "\n" : ""));
-            }
-            System.out.println();
+    public void openEntityWithName(String employeeName) {
+        if (employeeExists(employeeName)) {
+            PrintEntity.printEmployee(employeeDAO.getByName(employeeName), USE_BR);
         } else {
-            System.out.println("The employee \"" + employeeName + "\" not found");
+            System.out.println(employeeDAO.getEntityStatus() + " \"" + employeeName + "\" not found!");
         }
     }
 
-    @Override
+    public void printAllDepartments() {
+        System.out.println("Departmnents:");
+        PrintEntity.printAllDepartments(departmentDAO.getAll());
+    }
+
+    public void printAllEmployee(String department) {
+        System.out.println("Employees of departmnent " + department + ":");
+        PrintEntity.printAllEmployee(employeeDAO.getAll(department));
+    }
+
+    public void printEmployee(String employeeName, boolean use_br) {
+        PrintEntity.printEmployee(employeeDAO.getByName(employeeName), use_br);
+    }
+
     public void printAll() {
         System.out.println("Error! Unknown command - type \"help\" for commands list");
     }
 
-    @Override
     public void printSearchedEmployeeAge(String departmentName, int age) {
         System.out.println("Error! Unknown command - type \"help\" for commands list");
     }
 
-    @Override
     public void printTopEmployee(String type) {
         System.out.println("Error! Unknown command - type \"help\" for commands list");
     }

@@ -15,6 +15,8 @@ abstract class DAO<T extends Entity> {
 
     abstract public List<T> getAll();
 
+    abstract public T getByName(String name);
+
     public boolean save() {
         return false;
     }
