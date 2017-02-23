@@ -112,6 +112,103 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeDAO<T> {
     }
 
     @Override
+    public List<T> getAll() {
+        String query = SELECT_ALL_FROM_DB_EMPLOYEE;
+        List<T> result = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        String name;
+
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                name = rs.getString("name");
+                names.add(name);
+            }
+            for (String employeeName:names) {
+                result.add(getByName(employeeName));
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+    @Override
+    public List<T> getAll(String departmentName) {
+        String query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_DEPARTMENT_NAME_IS_EQUAL + swq(departmentName);
+        List<T> result = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        String name;
+
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                name = rs.getString("name");
+                names.add(name);
+            }
+            for (String employeeName:names) {
+                result.add(getByName(employeeName));
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+    @Override
+    public List<T> getAll(String departmentName, int age) {
+        String query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_AGE_IS_EQUAL + age + " AND "
+                + DEPARTMENT_IS_EQUAL + swq(departmentName);
+        List<T> result = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        String name;
+
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                name = rs.getString("name");
+                names.add(name);
+            }
+            for (String employeeName:names) {
+                result.add(getByName(employeeName));
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+    @Override
+    public T getByName(String name) {
+        String query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(name);
+        T result = null;
+        String type = "";
+        int age;
+        String department;
+        String methodology;
+        String language;
+
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next())
+                type = rs.getString("type");
+                age =  rs.getInt("age");
+                department =  rs.getString("department_name");
+                if (type.equals(EMPLOYEE_MANAGER_TYPE)) {
+                    methodology =  rs.getString("methodology");
+                    result = (T)(new Manager(name, type, age, department, methodology));
+                } else {
+                    language =  rs.getString("language");
+                    result = (T)(new Developer(name, type, age, department, language));
+                }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+
+    @Override
     public boolean exists(String name) {
         String query = SELECT_NAME_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(name);
         boolean result = false;
@@ -120,6 +217,23 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeDAO<T> {
             ResultSet rs = statement.executeQuery(query);
             if (rs.next())
                 result = true;
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+    @Override
+    public int getMaxEmployees(String departmentName, String type) {
+        int result = 0;
+
+        String query = SELECT_COUNT_FROM_DB_EMPLOYEE + WHERE_DEPARTMENT_NAME_IS_EQUAL
+                + swq(departmentName) + " AND " + TYPE_IS_EQUAL + swq(type);
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next()) {
+                result = rs.getInt("count");
+            }
         } catch (SQLException e) {
             System.out.println("MySQL query error! " + query);
         }
@@ -141,146 +255,6 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeDAO<T> {
             } catch (SQLException e) {
                 System.out.println("MySQL error! DB connection not close!");
             }
-        }
-    }
-
-    public void print(String employeeName, boolean use_br) {
-        printEmployeeWhereValue(SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(employeeName), use_br);
-    }
-
-    public void printAll(String departmentName) {
-        printEmployeeWhereValue(SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_DEPARTMENT_NAME_IS_EQUAL + swq(departmentName), NOT_USE_BR);
-    }
-
-    private int getMaxEmployees(String departmentName, String type) {
-        int result = 0;
-
-        String query = SELECT_COUNT_FROM_DB_EMPLOYEE + WHERE_DEPARTMENT_NAME_IS_EQUAL
-                + swq(departmentName) + " AND " + TYPE_IS_EQUAL + swq(type);
-        try {
-            ResultSet rs = statement.executeQuery(query);
-            if (rs.next()) {
-                result = rs.getInt("count");
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + query);
-        }
-        return result;
-    }
-
-    public void printTop(String type) {
-        List<String> departments = new ArrayList<>();
-        String department = "";
-        int max = 0;
-        int tmp;
-
-        try {
-            ResultSet rs = statement.executeQuery(SELECT_NAME_FROM_DB_DEPARTMENT);
-            while (rs.next()) {
-                String name = rs.getString("name");
-                departments.add(name);
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + SELECT_NAME_FROM_DB_DEPARTMENT);
-        }
-        for (Object dep : departments) {
-            tmp = getMaxEmployees("" + dep, type);
-            if (tmp > max) {
-                max = tmp;
-                department = "" + dep;
-            }
-        }
-        if (max > 0) {
-            System.out.println("Department " + department + " has " + max + ((type.equals("D")) ? " developers" : " managers"));
-        } else {
-            System.out.println("Department's is not have any " + ((type.equals("D")) ? " developers" : " managers"));
-        }
-    }
-
-    private void printEmployeeWhereValue(String query, boolean use_br) {
-        try {
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                String name = rs.getString("name");
-                System.out.print("name: " + name + " " + ((use_br) ? "\n" : ""));
-
-                int age = rs.getInt("age");
-                System.out.print("age: " + age + " " + ((use_br) ? "\n" : ""));
-
-                String type = rs.getString("type");
-                String departmentName = rs.getString("department_name");
-                System.out.print("department: " + departmentName + " " + ((use_br) ? "\n" : ""));
-
-                if (type.equals(EMPLOYEE_MANAGER_TYPE)) {
-                    System.out.print("type: " + type + " (MANAGER) " + ((use_br) ? "\n" : ""));
-                    String methodology = rs.getString("methodology");
-                    System.out.print("methodology: " + methodology + " " + ((use_br) ? "\n" : ""));
-                } else {
-                    System.out.print("type: " + type + " (DEVELOPER) " + ((use_br) ? "\n" : ""));
-                    String language = rs.getString("language");
-                    System.out.print("language: " + language + " " + ((use_br) ? "\n" : ""));
-                }
-                System.out.println();
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + query);
-        }
-    }
-
-    public void printAll() {
-        String tmpString;
-        try {
-            printStringSetLength("Department Name", 26);
-            printStringSetLength("Employee Name", 26);
-            printStringSetLength("Type", 20);
-            printStringSetLength("Age", 20);
-            System.out.println();
-
-            ResultSet rs = statement.executeQuery(SELECT_ALL_FROM_DB_EMPLOYEE_WO);
-            while (rs.next()) {
-                tmpString = rs.getString("department_name");
-                printStringSetLength(tmpString, 26);
-                tmpString = rs.getString("name");
-                printStringSetLength(tmpString, 26);
-                tmpString = rs.getString("type");
-                printStringSetLength(tmpString, 20);
-                tmpString = Integer.toString(rs.getInt("age"));
-                printStringSetLength(tmpString, 20);
-                System.out.println();
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + SELECT_ALL_FROM_DB_EMPLOYEE_WO);
-        }
-    }
-
-    public void printAll(String departmentName, int age) {
-        String tmpString;
-        String query = "";
-
-        if (age <= 0) {
-            System.out.println("Error! Age " + age);
-            return;
-        }
-        try {
-            printStringSetLength("Employee Name", 26);
-            printStringSetLength("Type", 20);
-            printStringSetLength("Department Name", 26);
-            System.out.println();
-
-            query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_AGE_IS_EQUAL + age + " AND "
-                    + DEPARTMENT_IS_EQUAL + swq(departmentName);
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                tmpString = rs.getString("name");
-                printStringSetLength(tmpString, 26);
-                tmpString = rs.getString("type");
-                printStringSetLength(tmpString, 20);
-                tmpString = rs.getString("department_name");
-                printStringSetLength(tmpString, 26);
-                System.out.println();
-            }
-        } catch (SQLException e) {
-            System.out.println("MySQL query error! " + query);
         }
     }
 }

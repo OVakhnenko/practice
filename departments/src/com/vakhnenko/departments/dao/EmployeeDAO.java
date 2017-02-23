@@ -32,5 +32,19 @@ public class EmployeeDAO<T extends Entity> extends EntityDAO<T> {
         return result;
     }
 
+    public List<T> getAll(String departmentName, int age) {
+        List<T> result = new ArrayList<>();
+
+        for (T list : getAll()) {
+            if (((Employee) list).getDepartment().equals(departmentName)&&(((Employee) list).getAge() == age)) {
+                result.add(list);
+            }
+        }
+        return result;
+    }
+    public int getMaxEmployees(String departmentName, String type) {
+        return 0;
+    }
+
     public void done() {}
 }

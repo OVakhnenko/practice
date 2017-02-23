@@ -85,7 +85,7 @@ public class Constants {
     public static final String SELECT_TYPE_FROM_DB_EMPLOYEE = ""
             + "select type from employee ";
     public static final String SELECT_ALL_FROM_DB_EMPLOYEE = ""
-            + "select name, age, type, department_name, methodology, language from employee ";
+            + "select * from employee ";
     public static final String SELECT_ALL_FROM_DB_EMPLOYEE_WO = ""
             + "select * from employee order by department_name";
     public static final String SELECT_COUNT_FROM_DB_EMPLOYEE = ""

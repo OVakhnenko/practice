@@ -25,11 +25,11 @@ public class DepartmentsApplication {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         printFirstScreen();
 
-        /*while (noExit) {
+        while (noExit) {
             command = reader.readLine();
             noExit = readCommand(command);
-        }*/
-        readCommand("create -d 111 1111 11111");
+        }
+        /*readCommand("create -d 111 1111 11111");
         readCommand("create -d 111 1111 11111");
         readCommand("create -d 222 2222 22222");
         readCommand("create -d 333 3333 33333");
@@ -54,7 +54,7 @@ public class DepartmentsApplication {
         readCommand("search -e -a 23 -d 222 2222 22222");
         readCommand("top -d -t d");
         readCommand("top -d -t m");
-        readCommand("save");
+        readCommand("save");*/
     }
 
     public void done() {
@@ -101,7 +101,7 @@ public class DepartmentsApplication {
                 departmentService.printAllDepartments();
                 break;
             case ALL_COMMAND:
-                departmentService.printAll();
+                departmentService.printAllEmployeeGrid();
                 break;
             case SEARCH_COMMAND:
                 printSearchedEmployee(commands);
@@ -326,7 +326,12 @@ public class DepartmentsApplication {
 
     private void printTopEmployee(String[] commands) {
         String type = getKeyFromArray(commands, TYPE_EMPLOYEE_KEY);
-        departmentService.printTopEmployee(type);
+
+        if (type.isEmpty()) {
+            System.out.println("Error! Unknown command - \" type \"help\" for commands list");
+        } else {
+            departmentService.printTopEmployee(type);
+        }
     }
 
     private void printHelp() {

@@ -107,6 +107,8 @@ public class DepartmentService {
             if (employeeDAO.save()) {
                 System.out.println("All data saved successfully");
             }
+        } else {
+            System.out.println("Data not been saved!");
         }
     }
 
@@ -136,16 +138,38 @@ public class DepartmentService {
         PrintEntity.printEmployee(employeeDAO.getByName(employeeName), use_br);
     }
 
-    public void printAll() {
-        System.out.println("Error! Unknown command - type \"help\" for commands list");
+    public void printAllEmployeeGrid() {
+        PrintEntity.printAllEmployeeGrid(employeeDAO.getAll());
     }
 
     public void printSearchedEmployeeAge(String departmentName, int age) {
-        System.out.println("Error! Unknown command - type \"help\" for commands list");
+        PrintEntity.printAllEmployeeGrid(employeeDAO.getAll(departmentName, age));
     }
 
     public void printTopEmployee(String type) {
-        System.out.println("Error! Unknown command - type \"help\" for commands list");
+        String department = "";
+        int max = 0;
+        int tmp;
+
+        List<Department> departments = departmentDAO.getAll();
+        if (departments.size() == 0) {
+            System.out.println("Error! No departments!");
+            return;
+        }
+
+        for (Department dep : departments) {
+            tmp = employeeDAO.getMaxEmployees(dep.getName(), type);
+            if (tmp > max) {
+                max = tmp;
+                department = dep.getName();
+            }
+        }
+
+        if (max > 0) {
+            System.out.println("Department " + department + " has " + max + ((type.equals("D")) ? " developers" : " managers"));
+        } else {
+            System.out.println("Department's is not have any " + ((type.equals("D")) ? " developers" : " managers"));
+        }
     }
 
     public void done() {

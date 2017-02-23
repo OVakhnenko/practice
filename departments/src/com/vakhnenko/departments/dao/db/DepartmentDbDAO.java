@@ -72,6 +72,22 @@ public class DepartmentDbDAO extends DepartmentDAO {
     }
 
     @Override
+    public Department getByName(String name) {
+        String query = SELECT_NAME_FROM_DB_DEPARTMENT + WHERE_NAME_IS_EQUAL + swq(name);
+        Department result = null;
+
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next()) {
+                result = new Department(name);
+            }
+        } catch (SQLException e) {
+            System.out.println("MySQL query error! " + query);
+        }
+        return result;
+    }
+
+    @Override
     public List<Department> getAll() {
         List<Department> result = new ArrayList<>();
 
@@ -80,7 +96,6 @@ public class DepartmentDbDAO extends DepartmentDAO {
             while (rs.next()) {
                 String name = rs.getString("name");
                 result.add(new Department(name));
-                System.out.println("name: " + name);
             }
         } catch (SQLException e) {
             System.out.println("MySQL query error! " + SELECT_NAME_FROM_DB_DEPARTMENT);
