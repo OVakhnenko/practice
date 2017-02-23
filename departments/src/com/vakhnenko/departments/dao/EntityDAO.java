@@ -5,8 +5,8 @@ import com.vakhnenko.departments.entity.*;
 import java.util.*;
 
 public abstract class EntityDAO<T extends Entity> extends DAO<T> {
-    private List<T> list = new ArrayList<>();
     private String entityStatus = "";
+    private List<T> list = new ArrayList<>();
 
     @Override
     public void add(T item) {

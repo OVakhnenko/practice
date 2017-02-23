@@ -68,10 +68,10 @@ public class PrintEntity {
 
 /*
     public void printTop(String type) {
-        List<String> departments = new ArrayList<>();
         String department = "";
         int max = 0;
         int tmp;
+        List<String> departments = new ArrayList<>();
 
         try {
             ResultSet rs = statement.executeQuery(SELECT_NAME_FROM_DB_DEPARTMENT);

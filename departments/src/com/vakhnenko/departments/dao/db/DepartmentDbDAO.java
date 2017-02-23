@@ -58,8 +58,8 @@ public class DepartmentDbDAO extends DepartmentDAO {
 
     @Override
     public boolean exists(String name) {
-        String query = SELECT_NAME_FROM_DB_DEPARTMENT + WHERE_NAME_IS_EQUAL + swq(name);
         boolean result = false;
+        String query = SELECT_NAME_FROM_DB_DEPARTMENT + WHERE_NAME_IS_EQUAL + swq(name);
 
         try {
             ResultSet rs = statement.executeQuery(query);

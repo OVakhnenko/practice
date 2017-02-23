@@ -113,10 +113,10 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeDAO<T> {
 
     @Override
     public List<T> getAll() {
+        String name;
         String query = SELECT_ALL_FROM_DB_EMPLOYEE;
         List<T> result = new ArrayList<>();
         List<String> names = new ArrayList<>();
-        String name;
 
         try {
             ResultSet rs = statement.executeQuery(query);
@@ -180,13 +180,13 @@ public class EmployeeDbDAO<T extends Employee> extends EmployeeDAO<T> {
 
     @Override
     public T getByName(String name) {
-        String query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(name);
-        T result = null;
-        String type = "";
         int age;
+        String query = SELECT_ALL_FROM_DB_EMPLOYEE + WHERE_NAME_IS_EQUAL + swq(name);
+        String type = "";
         String department;
         String methodology;
         String language;
+        T result = null;
 
         try {
             ResultSet rs = statement.executeQuery(query);

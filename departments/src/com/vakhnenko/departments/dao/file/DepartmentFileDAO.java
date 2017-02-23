@@ -43,10 +43,10 @@ public class DepartmentFileDAO extends DepartmentDAO {
     }
 
     public List<String> read() {
+        String line;
         BufferedReader reader = ConnectionUtilFile.getFileConnectionReader();
         List<Department> departments = getAll();
         List<String> lines = new ArrayList<>();
-        String line;
 
         if (departments.size() == 0) {
             System.out.println("Error! Departments are exists");

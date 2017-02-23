@@ -32,8 +32,8 @@ public class EmployeeFileDAO<T extends Employee> extends EmployeeDAO<T> {
     }
 
     public boolean save() {
-        String type;
         boolean result = false;
+        String type;
         List<T> employees = getAll();
 
         if (employees.size() == 0) {
